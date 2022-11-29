@@ -22,25 +22,25 @@ public:
 
 	UPlayAnimBehaviourComponent();
 
-	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	UPROPERTY(EditDefaultsOnly, Category = "Idle|Animations")
 	UAnimMontage* AnimMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	UPROPERTY(EditDefaultsOnly, Category = "Idle|Animations")
 	FName SectionName;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	UPROPERTY(EditDefaultsOnly, Category = "Idle|Animations")
 	float MinAnimSeconds;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	UPROPERTY(EditDefaultsOnly, Category = "Idle|Animations")
 	float MaxAnimSeconds;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Animations|End")
+	UPROPERTY(EditDefaultsOnly, Category = "Idle|Animations|End")
 	bool bHasEndAnim;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Animations|End")
+	UPROPERTY(EditDefaultsOnly, Category = "Idle|Animations|End")
 	UAnimMontage* EndAnimMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Animations|End")
+	UPROPERTY(EditDefaultsOnly, Category = "Idle|Animations|End")
 	FName EndSectionName;
 
 protected:

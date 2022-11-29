@@ -23,6 +23,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Idle")
 	bool bCanPlayConsecutive;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Idle")
+	int32 Weight;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

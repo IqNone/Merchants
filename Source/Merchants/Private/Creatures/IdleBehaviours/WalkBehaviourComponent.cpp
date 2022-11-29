@@ -37,7 +37,7 @@ void UWalkBehaviourComponent::StartBehaviour()
 	}
 	
 	// Generate a random walk distance
-	float Distance = UKismetMathLibrary::RandomFloat() * (MaxWalkDistance - MinWalkDistance) + MinWalkDistance;
+	float Distance = UKismetMathLibrary::RandomFloatInRange(MinWalkDistance, MaxWalkDistance);
 
 	FNavLocation Result;
 
@@ -47,12 +47,9 @@ void UWalkBehaviourComponent::StartBehaviour()
 	if (Success)
 	{
 		EPathFollowingRequestResult::Type ResultType = Controller->MoveToLocation(Result.Location, 0.1f, true, true, true, true, nullptr, true);
-		if (ResultType == EPathFollowingRequestResult::Type::RequestSuccessful)
+		if (ResultType != EPathFollowingRequestResult::Type::RequestSuccessful)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("WalkStarted"));
-		} 
-		else
-		{
+			UE_LOG(LogTemp, Warning, TEXT("MoveToTarget failed!"));
 			OnWalkCompleted();
 		}
 	}
@@ -78,6 +75,5 @@ void UWalkBehaviourComponent::OnWalkCompleted()
 
 void UWalkBehaviourComponent::OnWalkCompleted(FAIRequestID RequestID, EPathFollowingResult::Type MovementResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("WalkCompleted"));
 	OnWalkCompleted();
 }

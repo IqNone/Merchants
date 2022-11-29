@@ -24,11 +24,11 @@ public:
 
 	UWalkBehaviourComponent();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Walk")
-	float MaxWalkDistance;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Walk")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Idle|Walk")
 	float MinWalkDistance;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Idle|Walk")
+	float MaxWalkDistance;
 
 protected:
 	virtual void BeginPlay() override;

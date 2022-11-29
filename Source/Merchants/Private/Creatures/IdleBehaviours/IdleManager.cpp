@@ -29,10 +29,14 @@ void UIdleManager::SetComponents(TInlineComponentArray<UIdleBehaviourComponent*>
 {
 	IdleBehaviourComponents = Components;	
 
+	WeightsSum = 0;
+	Weights.Empty();
+
 	for (UIdleBehaviourComponent* Component : IdleBehaviourComponents)
 	{
-
 		Component->OnBehaviourEnd.AddDynamic(this, &UIdleManager::OnIdleBehaviourEnd);
+		WeightsSum += Component->Weight;
+		Weights.Add(WeightsSum);
 	}
 }
 
@@ -43,7 +47,7 @@ void UIdleManager::Start()
 		return;
 	}
 
-	int32 Next = FMath::RandRange(0, IdleBehaviourComponents.Num() - 1);
+	int32 Next = RandomIndex();
 	if (Next == Index && Index >= 0 && !IdleBehaviourComponents[Index]->bCanPlayConsecutive)
 	{
 		Next = (Next + 1) % IdleBehaviourComponents.Num();
@@ -67,4 +71,19 @@ void UIdleManager::End()
 void UIdleManager::OnIdleBehaviourEnd()
 {
 	Start();
+}
+
+int32 UIdleManager::RandomIndex()
+{
+	int32 Rand = FMath::RandRange(0, WeightsSum - 1);
+
+	for (int32 Id = 0; Id < Weights.Num(); ++Id)
+	{
+		if (Rand < Weights[Id])
+		{
+			return Id;
+		}
+	}
+
+	return 0; //should not get here
 }

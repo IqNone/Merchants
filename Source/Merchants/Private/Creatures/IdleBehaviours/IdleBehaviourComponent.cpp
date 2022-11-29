@@ -14,6 +14,7 @@ UIdleBehaviourComponent::UIdleBehaviourComponent()
 
 	// ...
 	bCanPlayConsecutive = true;
+	Weight = 1;
 }
 
 // Called when the game starts

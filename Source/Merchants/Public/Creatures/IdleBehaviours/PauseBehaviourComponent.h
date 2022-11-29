@@ -18,11 +18,11 @@ public:
 	
 	UPauseBehaviourComponent();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pause")
-	float MaxPauseSeconds;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pause")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Idle|Pause")
 	float MinPauseSeconds;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Idle|Pause")
+	float MaxPauseSeconds;
 
 public:
 

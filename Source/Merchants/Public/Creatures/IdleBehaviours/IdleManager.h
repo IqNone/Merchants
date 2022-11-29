@@ -29,8 +29,12 @@ public:
 private:
 
 	TInlineComponentArray<UIdleBehaviourComponent*> IdleBehaviourComponents;
-	
 	int32 Index;
+
+	TArray<int32> Weights;
+	int32 WeightsSum;
+
+	int32 RandomIndex();
 
 	UFUNCTION()
 	void OnIdleBehaviourEnd();
