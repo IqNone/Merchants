@@ -39,7 +39,7 @@ void UWalkBehaviourComponent::StartBehaviour()
 	// Generate a random walk distance
 	float Distance = UKismetMathLibrary::RandomFloatInRange(MinWalkDistance, MaxWalkDistance);
 
-	FNavLocation Result;
+	FNavLocation Result;	
 
 	UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(GetWorld());
 	bool Success = NavigationSystem->GetRandomReachablePointInRadius(Owner->GetActorLocation(), Distance, Result);

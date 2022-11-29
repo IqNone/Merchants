@@ -19,6 +19,7 @@ ACreature::ACreature()
 	bUseControllerRotationYaw = false;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;	
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 500.f, 0.f);
 
 	// AI behaviour
 	bAgressive = false;
@@ -60,5 +61,4 @@ void ACreature::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ACreature::SetMaxSpeed(float Speed)
 {
 	GetCharacterMovement()->MaxWalkSpeed = Speed;
-	GetCharacterMovement()->RotationRate = FRotator(0.f, Speed, 0.f);
 }

@@ -77,6 +77,7 @@ int32 UIdleManager::RandomIndex()
 {
 	int32 Rand = FMath::RandRange(0, WeightsSum - 1);
 
+	// One could do a binary search here, but i don't think there will ever be more than 4-5 items
 	for (int32 Id = 0; Id < Weights.Num(); ++Id)
 	{
 		if (Rand < Weights[Id])
