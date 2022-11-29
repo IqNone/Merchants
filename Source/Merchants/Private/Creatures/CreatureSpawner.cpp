@@ -64,7 +64,7 @@ void ACreatureSpawner::Spawn()
 
 void ACreatureSpawner::SpawnQueryFinished(TSharedPtr<FEnvQueryResult> SpawnQueryResult)
 {
-	if (!SpawnQueryResult->IsSuccsessful())
+	if (!SpawnQueryResult->IsSuccessful())
 	{
 		return;
 	}

@@ -10,6 +10,7 @@
 class ACreature;
 class USphereComponent;
 class UEnvQuery;
+class UBillboardComponent;
 
 UCLASS()
 class MERCHANTS_API ACreatureSpawner : public AActor
