@@ -8,6 +8,10 @@
 
 class UIdleManager;
 class UWalkBehaviourComponent;
+class UHealthComponent;
+class AController;
+class UDamageType;
+class UInputComponent;
 
 UCLASS()
 class MERCHANTS_API ACreature : public ACharacter
@@ -30,21 +34,37 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	UIdleManager* IdleManager;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	UWalkBehaviourComponent* WalkComponent;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Components")
+	UHealthComponent* HealthComp;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Creature")
+	bool bDied;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	UAnimMontage* DeathAnim;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void HandleTakeDamage(UHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 private:
+	FTimerHandle DeathMontageHandle;
 
 	void SetMaxSpeed(float Speed);
+
+	UFUNCTION()
+	void OnDeathMontageEnded();
 };

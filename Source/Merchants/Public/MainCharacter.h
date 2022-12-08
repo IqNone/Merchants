@@ -7,6 +7,8 @@
 #include "InputActionValue.h"
 #include "MainCharacter.generated.h"
 
+class AWeapon;
+class AMainPlayerController;
 
 UCLASS(config = Game)
 class AMainCharacter : public ACharacter
@@ -51,13 +53,21 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Interact, meta = (AllowPrivateAccess = "true"))
 	class AInteractable* Interactable;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapon", meta = (AllowPrivateAccess = "true"))
+	FName WeaponSocketName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapon", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AWeapon> WeaponClass;
+
 private:
 
 	FTimerHandle InteractableCheckTimer;
 
 	void CheckInteractable();
 
-	class AMainPlayerController* MainPlayerController;
+	AMainPlayerController* MainPlayerController;
+
+	AWeapon* CurrentWeapon;
 
 protected:
 
@@ -76,10 +86,14 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
+	virtual void SetupWeapon();
+
 public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	FORCEINLINE AWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
 };
 

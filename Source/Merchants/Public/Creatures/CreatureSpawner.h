@@ -7,28 +7,31 @@
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "CreatureSpawner.generated.h"
 
-class ACreature;
 class USphereComponent;
+class ACreature;
 class UEnvQuery;
 class UBillboardComponent;
+class USkeletalMeshComponent;
 
-UCLASS()
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class MERCHANTS_API ACreatureSpawner : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+
+public:
 	ACreatureSpawner();
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Spawn")
-	TSubclassOf<ACreature> CreatureClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Spawn")
-	USkeletalMeshComponent* PreviewMesh;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Spawn")
 	USphereComponent* SpawnArea;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Spawn")
+	TSubclassOf<ACreature> CreatureClass;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Spawn")
+	UBillboardComponent* Billboard;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Spawn")
+	USkeletalMeshComponent* PreviewMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
 	float RespawnDeltaSeconds;
@@ -43,21 +46,20 @@ public:
 	FName SpawnQueryRadiusParamName;
 
 protected:
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 private:
-
-	UBillboardComponent* Billboard;
-
 	FEnvQueryRequest SpawnQueryRequest;
 
+	UFUNCTION()
 	void Spawn();
 
 	void SpawnQueryFinished(TSharedPtr<FEnvQueryResult> SpawnQueryResult);
 
+	UFUNCTION()
+	void HandleCreatureKilled(AActor* VictimActor, AActor* KilledActor, class AController* KillerController);
+
+	FTimerHandle RespawnTimerHandle;
 };

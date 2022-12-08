@@ -6,6 +6,10 @@
 #include "Creatures/IdleBehaviours/IdleManager.h"
 #include "Creatures/IdleBehaviours/IdleBehaviourComponent.h"
 #include "Creatures/IdleBehaviours/WalkBehaviourComponent.h"
+#include "Components/HealthComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/DamageType.h"
+#include "GameFramework/Controller.h"
 
 // Sets default values
 ACreature::ACreature()
@@ -30,6 +34,11 @@ ACreature::ACreature()
 	WalkComponent = CreateDefaultSubobject<UWalkBehaviourComponent>("WalkComponent");
 
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	HealthComp = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComp"));
+	HealthComp->OnHealthChanged.AddDynamic(this, &ACreature::HandleTakeDamage);
+
+	bDied = false;
 }
 
 // Called when the game starts or when spawned
@@ -61,4 +70,43 @@ void ACreature::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ACreature::SetMaxSpeed(float Speed)
 {
 	GetCharacterMovement()->MaxWalkSpeed = Speed;
+}
+
+void ACreature::HandleTakeDamage(UHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+	UE_LOG(LogTemp, Log, TEXT("Health %f of %s"), Health, *GetName());
+
+	IdleManager->End();
+
+	if (Health <= 0 && !bDied)
+	{
+		bDied = true;
+
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMovementComponent()->StopMovementImmediately();
+		DetachFromControllerPendingDestroy();
+
+		if (HasAuthority())
+		{
+			SetLifeSpan(10.0f);
+		}
+
+		//IdleManager->End();		
+		GetMesh()->GetAnimInstance()->Montage_Stop(0.f, nullptr);
+		if (DeathAnim)
+		{
+			float Duration = GetMesh()->GetAnimInstance()->Montage_Play(DeathAnim, 1.f);
+			GetWorld()->GetTimerManager().SetTimer(DeathMontageHandle, this, &ACreature::OnDeathMontageEnded, Duration, false);
+		}
+		else
+		{
+			OnDeathMontageEnded();
+		}
+	}
+}
+
+void ACreature::OnDeathMontageEnded() 
+{
+	GetMesh()->bPauseAnims = true;
+	GetMesh()->bNoSkeletonUpdate = true;
 }

@@ -8,6 +8,7 @@
 #include "Components/BillboardComponent.h"
 #include "EnvironmentQuery/EnvQuery.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
+#include "Components/HealthComponent.h"
 
 // Sets default values
 ACreatureSpawner::ACreatureSpawner()
@@ -44,12 +45,6 @@ void ACreatureSpawner::BeginPlay()
 	}	
 }
 
-// Called every frame
-void ACreatureSpawner::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 void ACreatureSpawner::Spawn()
 {
@@ -74,8 +69,13 @@ void ACreatureSpawner::SpawnQueryFinished(TSharedPtr<FEnvQueryResult> SpawnQuery
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	ACreature* SpawnedCreature = GetWorld()->SpawnActor<ACreature>(CreatureClass, SpawnLocation, FRotator::ZeroRotator, SpawnParams);
-	//if (SpawnedCreature)
-	//{
-	//	SpawnedCreature->GetHealthComp()->OnActorKilled.AddDynamic(this, &AELSpawner::HandleCreatureKilled);
-	//}
+	if (SpawnedCreature)
+	{
+		SpawnedCreature->HealthComp->OnActorKilled.AddDynamic(this, &ACreatureSpawner::HandleCreatureKilled);
+	}
+}
+
+void ACreatureSpawner::HandleCreatureKilled(AActor* VictimActor, AActor* KillerActor, class AController* KillerController) 
+{
+	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ACreatureSpawner::Spawn, RespawnDeltaSeconds);
 }

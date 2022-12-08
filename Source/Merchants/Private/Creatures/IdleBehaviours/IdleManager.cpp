@@ -14,6 +14,7 @@ UIdleManager::UIdleManager()
 
 	// ...
 	Index = -1;
+	bEndCalled = false;
 }
 
 // Called when the game starts
@@ -47,6 +48,8 @@ void UIdleManager::Start()
 		return;
 	}
 
+	bEndCalled = false;
+
 	int32 Next = RandomIndex();
 	if (Next == Index && Index >= 0 && !IdleBehaviourComponents[Index]->bCanPlayConsecutive)
 	{
@@ -62,6 +65,7 @@ void UIdleManager::Start()
 
 void UIdleManager::End()
 {
+	bEndCalled = true;
 	if (Index >= 0)
 	{
 		IdleBehaviourComponents[Index]->EndImediatly();
@@ -70,7 +74,10 @@ void UIdleManager::End()
 
 void UIdleManager::OnIdleBehaviourEnd()
 {
-	Start();
+	if (!bEndCalled)
+	{
+		Start();
+	}	
 }
 
 int32 UIdleManager::RandomIndex()

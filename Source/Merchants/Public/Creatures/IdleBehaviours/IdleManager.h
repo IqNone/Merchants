@@ -28,6 +28,8 @@ public:
 
 private:
 
+	bool bEndCalled;
+
 	TInlineComponentArray<UIdleBehaviourComponent*> IdleBehaviourComponents;
 	int32 Index;
 

@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Interactables/Interactable.h"
 #include "MainPlayerController.h"
+#include "Weapons/Weapon.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,6 +54,8 @@ AMainCharacter::AMainCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
 	MaxInteractDistance = 200;
+
+	WeaponSocketName = "WeaponSocket";
 }
 
 void AMainCharacter::BeginPlay()
@@ -71,6 +74,8 @@ void AMainCharacter::BeginPlay()
 	}
 
 	GetWorldTimerManager().SetTimer(InteractableCheckTimer, this, &AMainCharacter::CheckInteractable, .5f, true);
+
+	SetupWeapon();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -153,5 +158,24 @@ void AMainCharacter::Interact()
 	if (Interactable)
 	{
 		Interactable->Interact(this);
+	}
+}
+
+void AMainCharacter::SetupWeapon()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->Destroy();
+		CurrentWeapon = nullptr;
+	}
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	CurrentWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
+		CurrentWeapon->SetOwner(this);
 	}
 }
