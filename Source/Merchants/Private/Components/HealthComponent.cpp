@@ -17,7 +17,7 @@ UHealthComponent::UHealthComponent()
 	// ...
 	DefaultHealth = 100;
 	bIsDead = false;
-	SetIsReplicated(true);
+	SetIsReplicatedByDefault(true);
 }
 
 // Called when the game starts
