@@ -12,7 +12,7 @@
 #include "Interactables/Interactable.h"
 #include "MainPlayerController.h"
 #include "Weapons/Weapon.h"
-
+#include "Components/Combat/CombatComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMerchantsCharacter
@@ -56,6 +56,11 @@ AMainCharacter::AMainCharacter()
 	MaxInteractDistance = 200;
 
 	WeaponSocketName = "WeaponSocket";
+
+	CombatMode = ECombatMode::ECM_OneHanded;
+	OneHandedCombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("OneHandedCombatComponent"));
+
+	CombatComponents.Add(ECombatMode::ECM_OneHanded, OneHandedCombatComponent);
 }
 
 void AMainCharacter::BeginPlay()
@@ -98,6 +103,9 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
+
+		//Attacking
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AMainCharacter::Attack);
 	}
 
 }
@@ -159,6 +167,11 @@ void AMainCharacter::Interact()
 	{
 		Interactable->Interact(this);
 	}
+}
+
+void AMainCharacter::Attack()
+{
+	CombatComponents[CombatMode]->Attack();
 }
 
 void AMainCharacter::SetupWeapon()

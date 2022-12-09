@@ -9,6 +9,18 @@
 
 class AWeapon;
 class AMainPlayerController;
+class AInteractable;
+class UCombatComponent;
+
+UENUM(BlueprintType)
+enum class ECombatMode : uint8
+{
+	ECM_Unarmed UMETA(DisplayName = "Unarmed"),
+	ECM_OneHanded UMETA(DisplayName = "OneHanded"),
+	ECM_TwoHanded UMETA(DisplayName = "TwoHanded"),
+
+	ECM_MAX UMETA(DisplayName = "DefaultMax")
+};
 
 UCLASS(config = Game)
 class AMainCharacter : public ACharacter
@@ -47,11 +59,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+	/** Attack Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* AttackAction;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Interact, meta = (AllowPrivateAccess = "true"))
 	int32 MaxInteractDistance;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Interact, meta = (AllowPrivateAccess = "true"))
-	class AInteractable* Interactable;
+	AInteractable* Interactable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapon", meta = (AllowPrivateAccess = "true"))
 	FName WeaponSocketName;
@@ -59,15 +75,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapon", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeapon> WeaponClass;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components|Combat", meta = (AllowPrivateAccess = "true"))
+	UCombatComponent* OneHandedCombatComponent;
+
 private:
+
+	AMainPlayerController* MainPlayerController;
+	
+	AWeapon* CurrentWeapon;
+	
+	ECombatMode CombatMode;
 
 	FTimerHandle InteractableCheckTimer;
 
+	TMap<ECombatMode, UCombatComponent*> CombatComponents;
+
 	void CheckInteractable();
-
-	AMainPlayerController* MainPlayerController;
-
-	AWeapon* CurrentWeapon;
 
 protected:
 
@@ -78,6 +101,8 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 	void Interact();
+
+	void Attack();
 
 protected:
 	// APawn interface
@@ -95,5 +120,7 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	FORCEINLINE AWeapon* GetCurrentWeapon() const { return CurrentWeapon; }
+
+	FORCEINLINE UCombatComponent* GetCurrentCombatComponent() const { return CombatComponents[CombatMode]; }
 };
 
