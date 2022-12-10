@@ -25,6 +25,8 @@ ACreature::ACreature()
 	GetCharacterMovement()->bOrientRotationToMovement = true;	
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 500.f, 0.f);
 
+	Name = "Creature";
+
 	// AI behaviour
 	bAgressive = false;
 	WalkSpeed = 150;
@@ -110,3 +112,22 @@ void ACreature::OnDeathMontageEnded()
 	GetMesh()->bPauseAnims = true;
 	GetMesh()->bNoSkeletonUpdate = true;
 }
+
+//------------ Start CombatCharacter
+
+float ACreature::GetMaxHealth() const
+{
+	return HealthComp->GetDefaultHealth();
+}
+
+float ACreature::GetHealth() const
+{
+	return HealthComp->GetHealth();
+}
+
+FName ACreature::GetCharacterName() const
+{
+	return Name;
+}
+
+//------------ End CombatCharacter

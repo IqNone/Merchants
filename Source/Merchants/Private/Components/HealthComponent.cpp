@@ -67,6 +67,11 @@ float UHealthComponent::GetHealth() const
 	return Health;
 }
 
+float UHealthComponent::GetDefaultHealth() const
+{
+	return DefaultHealth;
+}
+
 void UHealthComponent::Heal(float HealAmmount)
 {
 	if (HealAmmount <= 0.0f || Health <= 0.0f)

@@ -11,6 +11,8 @@ class AWeapon;
 class AMainPlayerController;
 class AInteractable;
 class UCombatComponent;
+class ACombatCharacter;
+
 
 UENUM(BlueprintType)
 enum class ECombatMode : uint8
@@ -78,19 +80,25 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components|Combat", meta = (AllowPrivateAccess = "true"))
 	UCombatComponent* OneHandedCombatComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	ACombatCharacter* CombatTarget;
+
+	bool bRotateToTarget;
+
 private:
 
 	AMainPlayerController* MainPlayerController;
 	
 	AWeapon* CurrentWeapon;
 	
-	ECombatMode CombatMode;
-
 	FTimerHandle InteractableCheckTimer;
 
-	TMap<ECombatMode, UCombatComponent*> CombatComponents;
-
 	void CheckInteractable();
+
+protected:
+
+	ECombatMode CombatMode;
+	TMap<ECombatMode, UCombatComponent*> CombatComponents;
 
 protected:
 
@@ -103,6 +111,7 @@ protected:
 	void Interact();
 
 	void Attack();
+	void StopAttack();
 
 protected:
 	// APawn interface
@@ -110,6 +119,8 @@ protected:
 
 	// To add mapping context
 	virtual void BeginPlay();
+
+	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupWeapon();
 

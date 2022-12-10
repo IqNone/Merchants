@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "CombatCharacter.h"
 #include "Creature.generated.h"
 
 class UIdleManager;
@@ -14,7 +15,7 @@ class UDamageType;
 class UInputComponent;
 
 UCLASS()
-class MERCHANTS_API ACreature : public ACharacter
+class MERCHANTS_API ACreature : public ACombatCharacter
 {
 	GENERATED_BODY()
 
@@ -39,6 +40,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Components")
 	UHealthComponent* HealthComp;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Creature")
+	FName Name;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Creature")
 	bool bDied;
@@ -67,4 +71,10 @@ private:
 
 	UFUNCTION()
 	void OnDeathMontageEnded();
+
+public:
+	// implement CombatCharacter
+	virtual float GetMaxHealth() const override;
+	virtual float GetHealth() const override;
+	virtual FName GetCharacterName() const override;
 };

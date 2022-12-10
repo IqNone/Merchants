@@ -13,12 +13,16 @@
 #include "MainPlayerController.h"
 #include "Weapons/Weapon.h"
 #include "Components/Combat/CombatComponent.h"
+#include "CombatCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMerchantsCharacter
 
 AMainCharacter::AMainCharacter()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -83,6 +87,22 @@ void AMainCharacter::BeginPlay()
 	SetupWeapon();
 }
 
+// Called every frame
+void AMainCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (bRotateToTarget && CombatTarget && CombatTarget->GetHealth() > 0)
+	{
+		FRotator LookAtYaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), CombatTarget->GetActorLocation());
+		LookAtYaw.Pitch = 0;
+		LookAtYaw.Roll = 0;
+		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, 15.f);
+
+		SetActorRotation(InterpRotation);
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -105,7 +125,8 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
 
 		//Attacking
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &AMainCharacter::Attack);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AMainCharacter::Attack);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Completed, this, &AMainCharacter::StopAttack);
 	}
 
 }
@@ -171,7 +192,14 @@ void AMainCharacter::Interact()
 
 void AMainCharacter::Attack()
 {
+	bRotateToTarget = true;
 	CombatComponents[CombatMode]->Attack();
+}
+
+void AMainCharacter::StopAttack()
+{
+	bRotateToTarget = false;
+	CombatComponents[CombatMode]->StopAttack();
 }
 
 void AMainCharacter::SetupWeapon()

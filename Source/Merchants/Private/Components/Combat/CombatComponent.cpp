@@ -14,7 +14,7 @@ UCombatComponent::UCombatComponent()
 	// ...
 	ComboType = EAnimComboType::EACT_Random;
 	AnimIndex = -1;
-	bAttackCombo = false;
+	bAttacking = false;
 }
 
 
@@ -33,21 +33,28 @@ void UCombatComponent::BeginPlay()
 }
 
 void UCombatComponent::Attack()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Attack Called"));
+{	
+	if (bAttacking)
+	{
+		return; //already attacking
+	}
+
+	bAttacking = true;
+
 	if (AnimIndex == -1)
 	{
 		PlayAnim();
 	}
-	else
-	{
-		bAttackCombo = true;
-	}
+}
+
+void UCombatComponent::StopAttack()
+{	
+	bAttacking = false;
 }
 
 void UCombatComponent::ComboAttack()
 {
-	if (bAttackCombo)
+	if (bAttacking)
 	{
 		UWorld* World = GetWorld();
 		if (World)
@@ -70,7 +77,6 @@ void UCombatComponent::AnimEnd()
 
 void UCombatComponent::PlayAnim()
 {
-	bAttackCombo = false;
 	if (AnimInstance)
 	{
 		AnimIndex = GetNextAnimIndex();

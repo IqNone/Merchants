@@ -6,6 +6,8 @@
 #include "GameFramework/DamageType.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
+#include "CombatCharacter.h"
+#include "MainCharacter.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -39,6 +41,18 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 	{
 		UE_LOG(LogTemp, Log, TEXT("hit: %s"), *OtherActor->StaticClass()->GetName());
 		UGameplayStatics::ApplyDamage(OtherActor, 30.f, GetOwner()->GetInstigatorController(), this, DamageType);
+
+		ACombatCharacter* Target = Cast<ACombatCharacter>(OtherActor);
+		if (!Target)
+		{
+			return;
+		}
+
+		AMainCharacter* Main = Cast<AMainCharacter>(GetOwner());
+		if (Main)
+		{
+			Main->CombatTarget = Target;
+		}
 	}
 }
 

@@ -38,6 +38,7 @@ protected:
 
 public:
 	virtual void Attack();
+	virtual void StopAttack();
 
 	virtual void ComboAttack();
 
@@ -53,7 +54,7 @@ private:
 
 	int32 AnimIndex;
 
-	bool bAttackCombo;
+	bool bAttacking;
 		
 	UAnimInstance* AnimInstance;
 
