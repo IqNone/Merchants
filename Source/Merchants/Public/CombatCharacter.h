@@ -22,5 +22,5 @@ public:
 	virtual float GetHealth() const;
 
 	UFUNCTION(BlueprintPure)
-	virtual FName GetCharacterName() const;
+	virtual FText GetCharacterName() const;
 };

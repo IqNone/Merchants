@@ -36,13 +36,15 @@ protected:
 	UFUNCTION()
 	void OnRep_Health(float OldHealth);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HealthComponent")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HealthComponent")
 	float DefaultHealth;
 
 	UFUNCTION()
 	void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 
 public:	
+
+	void SetDefaultHealth(float Value);
 
 	float GetHealth() const;
 

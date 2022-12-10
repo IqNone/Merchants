@@ -62,6 +62,15 @@ void UHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, c
 	}
 }
 
+void UHealthComponent::SetDefaultHealth(float Value)
+{
+	DefaultHealth = Value;
+	if (Health > DefaultHealth)
+	{
+		Health = DefaultHealth;
+	}
+}
+
 float UHealthComponent::GetHealth() const
 {
 	return Health;

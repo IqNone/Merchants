@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "CombatCharacter.h"
+#include "Engine/DataTable.h"
 #include "Creature.generated.h"
 
 class UIdleManager;
@@ -13,6 +14,32 @@ class UHealthComponent;
 class AController;
 class UDamageType;
 class UInputComponent;
+
+USTRUCT(BlueprintType)
+struct FCreatureData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Display)
+	FText Name;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Spawn)
+	float RespawnSeconds;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = AI)
+	bool bAgressive;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
+	float Health;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
+	float WalkSpeed;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
+	float RunSpeed;
+};
 
 UCLASS()
 class MERCHANTS_API ACreature : public ACombatCharacter
@@ -23,14 +50,11 @@ public:
 	// Sets default values for this character's properties
 	ACreature();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "AI")
-	bool bAgressive;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
+	FName CreatureId;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	float WalkSpeed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	float RunSpeed;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
+	UDataTable* CreaturesDataTable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	UIdleManager* IdleManager;
@@ -41,14 +65,14 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Components")
 	UHealthComponent* HealthComp;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Creature")
-	FName Name;
-
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Creature")
 	bool bDied;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animations")
 	UAnimMontage* DeathAnim;
+
+private:
+	FCreatureData* CreatureData;
 
 protected:
 	// Called when the game starts or when spawned
@@ -76,5 +100,8 @@ public:
 	// implement CombatCharacter
 	virtual float GetMaxHealth() const override;
 	virtual float GetHealth() const override;
-	virtual FName GetCharacterName() const override;
+	virtual FText GetCharacterName() const override;
+
+	// spawn
+	float GetRespawnSeconds() const;
 };

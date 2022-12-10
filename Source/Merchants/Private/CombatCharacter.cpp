@@ -22,7 +22,7 @@ float ACombatCharacter::GetHealth() const
 	return 0.f;
 }
 
-FName ACombatCharacter::GetCharacterName() const
+FText ACombatCharacter::GetCharacterName() const
 {
-	return "Chad";
+	return FText();
 }

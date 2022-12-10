@@ -34,9 +34,6 @@ public:
 	USkeletalMeshComponent* PreviewMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Spawn")
-	float RespawnDeltaSeconds;
-
-	UPROPERTY(EditAnywhere, Category = "Spawn")
 	float MaxRoamingRadius;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawn")
@@ -52,6 +49,7 @@ protected:
 
 private:
 	FEnvQueryRequest SpawnQueryRequest;
+	FTimerHandle RespawnTimerHandle;	
 
 	UFUNCTION()
 	void Spawn();
@@ -60,6 +58,4 @@ private:
 
 	UFUNCTION()
 	void HandleCreatureKilled(AActor* VictimActor, AActor* KilledActor, class AController* KillerController);
-
-	FTimerHandle RespawnTimerHandle;
 };

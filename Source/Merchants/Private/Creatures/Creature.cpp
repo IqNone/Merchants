@@ -10,6 +10,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/DamageType.h"
 #include "GameFramework/Controller.h"
+#include "Engine/DataTable.h"
 
 // Sets default values
 ACreature::ACreature()
@@ -25,12 +26,7 @@ ACreature::ACreature()
 	GetCharacterMovement()->bOrientRotationToMovement = true;	
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 500.f, 0.f);
 
-	Name = "Creature";
-
-	// AI behaviour
-	bAgressive = false;
-	WalkSpeed = 150;
-	RunSpeed = 600;
+	CreatureId = "None";
 
 	IdleManager = CreateDefaultSubobject<UIdleManager>("IdleManager");
 	WalkComponent = CreateDefaultSubobject<UWalkBehaviourComponent>("WalkComponent");
@@ -48,7 +44,16 @@ void ACreature::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetMaxSpeed(WalkSpeed);
+	if (CreaturesDataTable)
+	{
+		CreatureData = CreaturesDataTable->FindRow<FCreatureData>(CreatureId, TEXT("Creature Data"));
+	}
+
+	if (CreatureData)
+	{
+		HealthComp->SetDefaultHealth(CreatureData->Health);
+		SetMaxSpeed(CreatureData->WalkSpeed);
+	}
 
 	TInlineComponentArray<UIdleBehaviourComponent*> Components(this);
 	GetComponents<UIdleBehaviourComponent>(Components);
@@ -125,9 +130,22 @@ float ACreature::GetHealth() const
 	return HealthComp->GetHealth();
 }
 
-FName ACreature::GetCharacterName() const
+FText ACreature::GetCharacterName() const
 {
-	return Name;
+	if (CreatureData)
+	{
+		return CreatureData->Name;
+	}
+	return FText();
+}
+
+float ACreature::GetRespawnSeconds() const
+{
+	if (CreatureData)
+	{
+		return CreatureData->RespawnSeconds;
+	}
+	return 0.0f;
 }
 
 //------------ End CombatCharacter

@@ -26,8 +26,7 @@ ACreatureSpawner::ACreatureSpawner()
 	PreviewMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("PreviewMeshComp"));
 	PreviewMesh->SetupAttachment(GetRootComponent());
 
-	MaxRoamingRadius = 50000.f;
-	RespawnDeltaSeconds = 10;
+	MaxRoamingRadius = 50000.f;	
 
 	SpawnQueryRadiusParamName = "SpawnRadius";
 }
@@ -77,5 +76,9 @@ void ACreatureSpawner::SpawnQueryFinished(TSharedPtr<FEnvQueryResult> SpawnQuery
 
 void ACreatureSpawner::HandleCreatureKilled(AActor* VictimActor, AActor* KillerActor, class AController* KillerController) 
 {
-	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ACreatureSpawner::Spawn, RespawnDeltaSeconds);
+	ACreature* Creature = Cast<ACreature>(VictimActor);
+	if (Creature)
+	{
+		GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ACreatureSpawner::Spawn, Creature->GetRespawnSeconds());
+	}
 }
