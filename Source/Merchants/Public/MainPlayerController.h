@@ -6,6 +6,9 @@
 #include "GameFramework/PlayerController.h"
 #include "MainPlayerController.generated.h"
 
+class UUserWidget;
+class UWidget;
+
 /**
  * 
  */
@@ -17,16 +20,19 @@ class MERCHANTS_API AMainPlayerController : public APlayerController
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
-	TSubclassOf<class UUserWidget> MainHUDClass;
+	TSubclassOf<UUserWidget> MainHUDClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")
-	FName CrosshairWidgetName;
+	FName InventoryWidgetName;
 
 public:
+
+	void ToogleInventory();
 
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	UUserWidget* MainHUDWidget;
+	UWidget* InventoryWidget;
 };

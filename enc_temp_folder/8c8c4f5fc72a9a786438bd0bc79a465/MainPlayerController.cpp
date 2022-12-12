@@ -8,9 +8,6 @@ void AMainPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FInputModeGameAndUI InputMode;
-
-	SetInputMode(InputMode);
 	bShowMouseCursor = true;
 	//bEnableClickEvents = true;
 	//bEnableMouseOverEvents = true;
