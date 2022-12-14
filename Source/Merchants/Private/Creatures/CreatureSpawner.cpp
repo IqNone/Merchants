@@ -18,6 +18,10 @@ ACreatureSpawner::ACreatureSpawner()
 
 	SpawnArea = CreateDefaultSubobject<USphereComponent>(TEXT("SpehereComp"));
 	SpawnArea->SetSphereRadius(1000.f);
+	SpawnArea->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SpawnArea->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	SpawnArea->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
 	RootComponent = SpawnArea;
 
 	Billboard = CreateDefaultSubobject<UBillboardComponent>(TEXT("Billboard"));

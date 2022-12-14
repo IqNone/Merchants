@@ -31,6 +31,7 @@ void AMainPlayerController::BeginPlay()
 	}
 
 	InventoryWidget = MainHUDWidget->GetWidgetFromName(InventoryWidgetName);	
+	BagWidget = MainHUDWidget->GetWidgetFromName(BagWidgetName);
 }
 
 void AMainPlayerController::ToogleInventory()
@@ -47,5 +48,14 @@ void AMainPlayerController::ToogleInventory()
 	else
 	{
 		InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void AMainPlayerController::OpenBag()
+{
+	if (BagWidget)
+	{
+		BagWidget->SetVisibility(ESlateVisibility::Visible);
+		OnOpenBag();
 	}
 }

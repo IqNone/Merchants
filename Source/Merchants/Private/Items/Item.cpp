@@ -3,7 +3,15 @@
 
 #include "Items/Item.h"
 
+FItem::FItem() : ItemId(""), Quantity(0)
+{
 
-Item::Item(FName ItemId, int32 Quantity): ItemId(ItemId), Quantity(Quantity)
+}
+
+FItem::FItem(const FName ItemId, const int32 Quantity): ItemId(ItemId), Quantity(Quantity)
+{
+}
+
+FItem::FItem(const FItem& Other) : ItemId(Other.ItemId), Quantity(Other.Quantity)
 {
 }

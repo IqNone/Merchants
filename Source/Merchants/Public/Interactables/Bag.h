@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Interactables/Interactable.h"
+#include "Items/Item.h"
 #include "Bag.generated.h"
+
+class UStaticMeshComponent;
 
 UCLASS()
 class MERCHANTS_API ABag : public AInteractable
@@ -15,8 +18,11 @@ public:
 
 	ABag();
 
-	int32 MaxItems;
-	//TArray<
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Bag")
+	UStaticMeshComponent* MeshComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Bag")	
+	TArray<FItem> Items;
 
 	virtual void Interact(AMainCharacter* Player) override;
 };

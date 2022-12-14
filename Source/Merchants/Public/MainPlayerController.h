@@ -25,9 +25,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")
 	FName InventoryWidgetName;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")
+	FName BagWidgetName;
+
 public:
 
 	void ToogleInventory();
+
+	void OpenBag();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnOpenBag();
 
 protected:
 	virtual void BeginPlay() override;
@@ -35,4 +43,11 @@ protected:
 private:
 	UUserWidget* MainHUDWidget;
 	UWidget* InventoryWidget;
+	UWidget* BagWidget;
+
+public:
+
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE UUserWidget* GetMainHUDWidget() { return MainHUDWidget; }
+
 };

@@ -12,7 +12,7 @@ class AMainPlayerController;
 class AInteractable;
 class UCombatComponent;
 class ACombatCharacter;
-
+class UInventoryComponent;
 
 UENUM(BlueprintType)
 enum class ECombatMode : uint8
@@ -87,6 +87,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	ACombatCharacter* CombatTarget;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UInventoryComponent* InventoryComponent;
+
 	bool bRotateToTarget;
 
 private:
@@ -117,7 +120,11 @@ protected:
 	void Attack();
 	void StopAttack();
 
+public:
+
 	void ToogleInventory();
+	void OpenBag();
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

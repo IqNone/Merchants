@@ -14,6 +14,39 @@ class UHealthComponent;
 class AController;
 class UDamageType;
 class UInputComponent;
+class ABag;
+
+UENUM(BlueprintType)
+enum class EDropItemType : uint8
+{
+	EDIT_RandomQuantity UMETA(DisplayName = "RandomQuantity"),
+	EDIT_RandomChance UMETA(DisplayName = "RandomChance"),
+
+	EDIT_MAX UMETA(DisplayName = "DefaultMax")
+};
+
+USTRUCT(BlueprintType)
+struct FDropItem {
+
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drops")
+	FName ItemId;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drops")
+	EDropItemType DropType;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drops", Meta = (ClampMin = "0", EditCondition = "DropType == EDropItemType::EDIT_RandomQuantity"))
+	int32 MinQuantity;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drops", Meta = (ClampMin = "0", EditCondition = "DropType == EDropItemType::EDIT_RandomQuantity"))
+	int32 MaxQuantity;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drops", Meta = (ClampMin = "0", ClampMax = "1",EditCondition = "DropType == EDropItemType::EDIT_RandomChance"))
+	float Chanche;
+};
 
 USTRUCT(BlueprintType)
 struct FCreatureData : public FTableRowBase
@@ -39,6 +72,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
 	float RunSpeed;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Drops)
+	TArray<FDropItem> Drops;
 };
 
 UCLASS()
@@ -68,6 +104,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Creature")
 	bool bDied;
 
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Creature")
+	TSubclassOf<ABag> BagClass;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Animations")
 	UAnimMontage* DeathAnim;
 
@@ -80,6 +119,11 @@ protected:
 
 	UFUNCTION()
 	void HandleTakeDamage(UHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
+
+	UFUNCTION(Server, Reliable)
+	void DropLoot();
+
+	FVector GetLootBagLocation();
 
 public:	
 	// Called every frame

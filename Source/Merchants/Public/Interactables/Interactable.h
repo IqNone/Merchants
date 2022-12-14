@@ -23,10 +23,10 @@ public:
 	UBoxComponent* InterationBox;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction")
-	FName InterationName;
+	FText InterationName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
-	FName InteractionDescription;
+	FText InteractionDescription;
 
 private:
 	UBillboardComponent* Billboard;

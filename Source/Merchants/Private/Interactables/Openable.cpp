@@ -7,7 +7,7 @@
 
 AOpenable::AOpenable()
 {
-	InterationName = "Open";
+	InterationName = FText::FromString("Open");
 }
 
 void AOpenable::BeginPlay()

@@ -15,6 +15,8 @@
 #include "Components/Combat/CombatComponent.h"
 #include "CombatCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Components/InventoryComponent.h"
+#include "Items/Item.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMerchantsCharacter
@@ -65,6 +67,8 @@ AMainCharacter::AMainCharacter()
 	OneHandedCombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("OneHandedCombatComponent"));
 
 	CombatComponents.Add(ECombatMode::ECM_OneHanded, OneHandedCombatComponent);
+
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 }
 
 void AMainCharacter::BeginPlay()
@@ -178,6 +182,14 @@ void AMainCharacter::ToogleInventory()
 	}
 }
 
+void AMainCharacter::OpenBag()
+{
+	if (MainPlayerController)
+	{
+		MainPlayerController->OpenBag();
+	}
+}
+
 void AMainCharacter::CheckInteractable()
 {
 	FVector Forward = GetFollowCamera()->GetComponentRotation().Vector();
@@ -189,6 +201,8 @@ void AMainCharacter::CheckInteractable()
 	FCollisionQueryParams QueryParams;	
 
 	GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, ObjectParams, QueryParams);
+
+	//UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *(Hit.GetActor()->GetName()));
 	
 	Interactable = Cast<AInteractable>(Hit.GetActor());
 }

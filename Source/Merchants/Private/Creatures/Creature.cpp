@@ -11,6 +11,8 @@
 #include "GameFramework/DamageType.h"
 #include "GameFramework/Controller.h"
 #include "Engine/DataTable.h"
+#include "Engine/World.h"
+#include "Interactables/Bag.h"
 
 // Sets default values
 ACreature::ACreature()
@@ -116,6 +118,61 @@ void ACreature::OnDeathMontageEnded()
 {
 	GetMesh()->bPauseAnims = true;
 	GetMesh()->bNoSkeletonUpdate = true;
+
+	DropLoot();
+}
+
+void ACreature::DropLoot_Implementation()
+{
+	if (!CreatureData)
+	{
+		return;
+	}
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	ABag* Bag = GetWorld()->SpawnActor<ABag>(BagClass, GetLootBagLocation(), FRotator::ZeroRotator, SpawnParams);
+	Bag->InteractionDescription = GetCharacterName();
+
+	for (FDropItem DropItem : CreatureData->Drops)
+	{		
+		switch (DropItem.DropType)
+		{
+		case EDropItemType::EDIT_RandomQuantity:
+			Bag->Items.Add(FItem(DropItem.ItemId, FMath::RandRange(DropItem.MinQuantity, DropItem.MaxQuantity)));
+			break;
+		case EDropItemType::EDIT_RandomChance:
+			if (FMath::FRand() <= DropItem.Chanche)
+			{
+				Bag->Items.Add(FItem(DropItem.ItemId, 1));
+			}
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+FVector ACreature::GetLootBagLocation()
+{
+	FHitResult Hit;
+	FCollisionObjectQueryParams ObjectParams = FCollisionObjectQueryParams(ECollisionChannel::ECC_WorldStatic);
+	FCollisionQueryParams QueryParams;
+
+	FVector Start = GetActorLocation();
+	FVector End = FVector(Start.X, Start.Y, -1000000);
+
+	GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, ObjectParams, QueryParams);
+	
+	if (Hit.bBlockingHit)
+	{
+		return Hit.Location;
+	} 
+	else
+	{
+		return GetActorLocation();
+	}
 }
 
 //------------ Start CombatCharacter

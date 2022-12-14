@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "Engine/Texture2D.h"
 #include "Item.generated.h"
 
 UENUM(BlueprintType)
@@ -31,21 +32,35 @@ public:
 	FText Name;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)
-	FText Description;
+	EItemType ItemType;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)
-	EItemType ItemType;
+	int32 Weight;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)
+	UTexture2D* Icon;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)
+	FText Description;
 };
 
 /**
  * 
  */
-class MERCHANTS_API Item
+USTRUCT(BlueprintType)
+struct MERCHANTS_API FItem
 {
-public:
-	Item(FName ItemId, int32 Quantity);
+	GENERATED_BODY()
 
 public:
-	const FName ItemId;
+
+	FItem();//Blueprint
+	FItem(const FName ItemId, const int32 Quantity);
+	FItem(const FItem& Other);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FName ItemId;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 Quantity;
 };
