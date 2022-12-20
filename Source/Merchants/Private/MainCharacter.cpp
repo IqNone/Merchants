@@ -193,7 +193,7 @@ void AMainCharacter::OpenBag()
 
 void AMainCharacter::TakeItem_Implementation(const TScriptInterface<IItemsHolder>& Holder, const FName ItemId, const int32 Quantity)
 {
-	if (CanAdd(ItemId, Quantity) && Holder->CanRemove(ItemId, Quantity))
+	if (CanAdd(ItemId, Quantity) && Holder && Holder->CanRemove(ItemId, Quantity))
 	{
 		int32 Removed = Holder->Remove(ItemId, Quantity);
 		Add(ItemId, Removed);
@@ -202,7 +202,7 @@ void AMainCharacter::TakeItem_Implementation(const TScriptInterface<IItemsHolder
 
 void AMainCharacter::GiveItem_Implementation(const TScriptInterface<IItemsHolder>& Holder, const FName ItemId, const int32 Quantity)
 {
-	if (CanRemove(ItemId, Quantity) && Holder->CanAdd(ItemId, Quantity))
+	if (CanRemove(ItemId, Quantity) && Holder && Holder->CanAdd(ItemId, Quantity))
 	{
 		int32 Removed = Remove(ItemId, Quantity);
 		Holder->Add(ItemId, Removed);

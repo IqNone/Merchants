@@ -12,6 +12,8 @@ ABag::ABag()
 
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	MeshComponent->SetupAttachment(GetRootComponent());
+
+	bReplicates = true;
 }
 
 void ABag::Interact(AMainCharacter* Player)
@@ -77,6 +79,10 @@ int32 ABag::Remove(const FName ItemId, const int32 Quantity)
 			{
 				return Item.ItemId == ItemId;
 			});
+		if (Items.IsEmpty())
+		{
+			Destroy();
+		}
 		return result;
 	}
 }
