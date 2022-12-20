@@ -21,26 +21,64 @@ void ABag::Interact(AMainCharacter* Player)
 
 void ABag::OnRep_Items(TArray<FItem> OldItems)
 {
+	OnItemsChanged.Broadcast();
 }
 
 bool ABag::CanAdd(const FName ItemId, const int32 Quantity) const
 {
-	return false;
+	return true;
 }
 
 bool ABag::CanRemove(const FName ItemId, const int32 Quantity) const
 {
-	return false;
+	return true;
 }
 
 int32 ABag::Add(const FName ItemId, const int32 Quantity)
 {
-	return int32();
+	FItem* Existing = Items.FindByPredicate([ItemId](FItem Item)
+		{
+			return Item.ItemId == ItemId;
+		});
+
+	if (Existing)
+	{
+		Existing->Quantity += Quantity;
+	}
+	else
+	{
+		Items.Add(FItem(ItemId, Quantity));
+	}
+
+	return Quantity;
 }
 
 int32 ABag::Remove(const FName ItemId, const int32 Quantity)
 {
-	return int32();
+	FItem* Existing = Items.FindByPredicate([ItemId](FItem Item)
+		{
+			return Item.ItemId == ItemId;
+		});
+
+	if (!Existing)
+	{		
+		return 0;
+	}
+
+	if (Existing->Quantity > Quantity)
+	{
+		Existing->Quantity -= Quantity;
+		return Quantity;
+	} 
+	else
+	{
+		int32 result = Existing->Quantity;
+		Items.RemoveAll([ItemId](FItem Item)
+			{
+				return Item.ItemId == ItemId;
+			});
+		return result;
+	}
 }
 
 void ABag::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
