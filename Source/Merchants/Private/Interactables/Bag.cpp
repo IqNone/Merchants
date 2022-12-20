@@ -4,6 +4,7 @@
 #include "Interactables/Bag.h"
 #include "Components/StaticMeshComponent.h"
 #include "MainCharacter.h"
+#include "Net/UnrealNetwork.h"
 
 ABag::ABag()
 {
@@ -16,4 +17,35 @@ ABag::ABag()
 void ABag::Interact(AMainCharacter* Player)
 {
 	Player->OpenBag();
+}
+
+void ABag::OnRep_Items(TArray<FItem> OldItems)
+{
+}
+
+bool ABag::CanAdd(const FName ItemId, const int32 Quantity) const
+{
+	return false;
+}
+
+bool ABag::CanRemove(const FName ItemId, const int32 Quantity) const
+{
+	return false;
+}
+
+int32 ABag::Add(const FName ItemId, const int32 Quantity)
+{
+	return int32();
+}
+
+int32 ABag::Remove(const FName ItemId, const int32 Quantity)
+{
+	return int32();
+}
+
+void ABag::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ABag, Items);
 }

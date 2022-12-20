@@ -7,6 +7,7 @@
 #include "CombatComponent.generated.h"
 
 class UAnimInstance;
+class AMainCharacter;
 
 UENUM(BlueprintType)
 enum class EAnimComboType : uint8
@@ -50,12 +51,20 @@ protected:
 
 	virtual void PlayAnim();
 
+	UFUNCTION(NetMulticast, Unreliable)
+	virtual void NetMulticast_PlayAnim(int32 Index);
+
+	UFUNCTION(Server, Unreliable)
+	virtual void Server_PlayAnim(int32 Index);
+
 private:
 
 	int32 AnimIndex;
 
 	bool bAttacking;
 		
+	AMainCharacter* Owner;
+
 	UAnimInstance* AnimInstance;
 
 	FTimerHandle TimerHandle;

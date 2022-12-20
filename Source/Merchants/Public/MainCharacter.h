@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Items/Item.h"
 #include "MainCharacter.generated.h"
 
 class AWeapon;
@@ -25,7 +26,7 @@ enum class ECombatMode : uint8
 };
 
 UCLASS(config = Game)
-class AMainCharacter : public ACharacter
+class AMainCharacter : public ACharacter, public IItemsHolder
 {
 	GENERATED_BODY()
 
@@ -96,6 +97,7 @@ private:
 
 	AMainPlayerController* MainPlayerController;
 	
+	UPROPERTY(Replicated)
 	AWeapon* CurrentWeapon;
 	
 	FTimerHandle InteractableCheckTimer;
@@ -122,8 +124,21 @@ protected:
 
 public:
 
+	// ItemsHolder
+	virtual bool CanAdd(const FName ItemId, const int32 Quantity) const override;
+	virtual bool CanRemove(const FName ItemId, const int32 Quantity) const override;
+	virtual int32 Add(const FName ItemId, const int32 Quantity) override;
+	virtual int32 Remove(const FName ItemId, const int32 Quantity) override;
+	//------------------
+
 	void ToogleInventory();
 	void OpenBag();
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void TakeItem(const TScriptInterface<IItemsHolder>& Holder, const FName ItemId, const int32 Quantity);
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void GiveItem(const TScriptInterface<IItemsHolder>& Holder, const FName ItemId, const int32 Quantity);
 
 protected:
 	// APawn interface

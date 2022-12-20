@@ -91,14 +91,9 @@ void ACreature::HandleTakeDamage(UHealthComponent* OwningHealthComp, float Healt
 	{
 		bDied = true;
 
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetMovementComponent()->StopMovementImmediately();
+		GetMovementComponent()->StopMovementImmediately();		
 		DetachFromControllerPendingDestroy();
-
-		if (HasAuthority())
-		{
-			SetLifeSpan(10.0f);
-		}
+		//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		//IdleManager->End();		
 		GetMesh()->GetAnimInstance()->Montage_Stop(0.f, nullptr);
@@ -119,10 +114,14 @@ void ACreature::OnDeathMontageEnded()
 	GetMesh()->bPauseAnims = true;
 	GetMesh()->bNoSkeletonUpdate = true;
 
-	DropLoot();
+	if (HasAuthority()) 
+	{
+		DropLoot();
+		Destroy();
+	}
 }
 
-void ACreature::DropLoot_Implementation()
+void ACreature::DropLoot()
 {
 	if (!CreatureData)
 	{
@@ -134,6 +133,7 @@ void ACreature::DropLoot_Implementation()
 
 	ABag* Bag = GetWorld()->SpawnActor<ABag>(BagClass, GetLootBagLocation(), FRotator::ZeroRotator, SpawnParams);
 	Bag->InteractionDescription = GetCharacterName();
+	Bag->SetLifeSpan(60.f);
 
 	for (FDropItem DropItem : CreatureData->Drops)
 	{		

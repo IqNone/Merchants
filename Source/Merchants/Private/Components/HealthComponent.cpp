@@ -25,12 +25,10 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GetOwnerRole() == ROLE_Authority) {
-		AActor* MyOwner = GetOwner();
-		if (MyOwner)
-		{
-			MyOwner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleTakeAnyDamage);
-		}
+	AActor* MyOwner = GetOwner();
+	if (MyOwner)
+	{
+		MyOwner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleTakeAnyDamage);
 	}
 
 	Health = DefaultHealth;
@@ -99,4 +97,5 @@ void UHealthComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UHealthComponent, Health);
+	DOREPLIFETIME(UHealthComponent, DefaultHealth);
 }

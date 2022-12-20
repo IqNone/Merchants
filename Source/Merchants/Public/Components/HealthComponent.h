@@ -36,7 +36,7 @@ protected:
 	UFUNCTION()
 	void OnRep_Health(float OldHealth);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HealthComponent")
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = "HealthComponent")
 	float DefaultHealth;
 
 	UFUNCTION()

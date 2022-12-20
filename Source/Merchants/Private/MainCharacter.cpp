@@ -17,6 +17,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/InventoryComponent.h"
 #include "Items/Item.h"
+#include "Net/UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMerchantsCharacter
@@ -190,6 +191,24 @@ void AMainCharacter::OpenBag()
 	}
 }
 
+void AMainCharacter::TakeItem_Implementation(const TScriptInterface<IItemsHolder>& Holder, const FName ItemId, const int32 Quantity)
+{
+	if (CanAdd(ItemId, Quantity) && Holder->CanRemove(ItemId, Quantity))
+	{
+		int32 Removed = Holder->Remove(ItemId, Quantity);
+		Add(ItemId, Removed);
+	}
+}
+
+void AMainCharacter::GiveItem_Implementation(const TScriptInterface<IItemsHolder>& Holder, const FName ItemId, const int32 Quantity)
+{
+	if (CanRemove(ItemId, Quantity) && Holder->CanAdd(ItemId, Quantity))
+	{
+		int32 Removed = Remove(ItemId, Quantity);
+		Holder->Add(ItemId, Removed);
+	}
+}
+
 void AMainCharacter::CheckInteractable()
 {
 	FVector Forward = GetFollowCamera()->GetComponentRotation().Vector();
@@ -229,6 +248,11 @@ void AMainCharacter::StopAttack()
 
 void AMainCharacter::SetupWeapon()
 {
+	if (GetLocalRole() != ROLE_Authority)
+	{
+		return;
+	}
+
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->Destroy();
@@ -237,6 +261,8 @@ void AMainCharacter::SetupWeapon()
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+	SpawnParams.Owner = this;
 
 	CurrentWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 	if (CurrentWeapon)
@@ -244,4 +270,35 @@ void AMainCharacter::SetupWeapon()
 		CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
 		CurrentWeapon->SetOwner(this);
 	}
+}
+
+// Start ItemsHolder implementation
+
+bool AMainCharacter::CanAdd(const FName ItemId, const int32 Quantity) const
+{
+	return InventoryComponent->CanAdd(ItemId, Quantity);
+}
+
+bool AMainCharacter::CanRemove(const FName ItemId, const int32 Quantity) const
+{
+	return InventoryComponent->CanRemove(ItemId, Quantity);
+}
+
+int32 AMainCharacter::Add(const FName ItemId, const int32 Quantity)
+{
+	return InventoryComponent->Add(ItemId, Quantity);
+}
+
+int32 AMainCharacter::Remove(const FName ItemId, const int32 Quantity)
+{
+	return InventoryComponent->Remove(ItemId, Quantity);
+}
+
+// End ItemsHolder implementation
+
+void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AMainCharacter, CurrentWeapon);
 }

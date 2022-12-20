@@ -13,7 +13,12 @@ void AMainPlayerController::BeginPlay()
 	SetInputMode(InputMode);
 	bShowMouseCursor = true;
 	//bEnableClickEvents = true;
-	//bEnableMouseOverEvents = true;
+	//bEnableMouseOverEvents = true;	
+
+	if (GetLocalRole() != ROLE_AutonomousProxy)
+	{
+		return;
+	}
 
 	if (MainHUDClass)
 	{
@@ -36,7 +41,7 @@ void AMainPlayerController::BeginPlay()
 
 void AMainPlayerController::ToogleInventory()
 {
-	if (!InventoryWidget)
+	if (GetLocalRole() != ROLE_AutonomousProxy || !InventoryWidget)
 	{
 		return;
 	}
@@ -53,7 +58,7 @@ void AMainPlayerController::ToogleInventory()
 
 void AMainPlayerController::OpenBag()
 {
-	if (BagWidget)
+	if (GetLocalRole() != ROLE_AutonomousProxy || BagWidget)
 	{
 		BagWidget->SetVisibility(ESlateVisibility::Visible);
 		OnOpenBag();

@@ -28,11 +28,6 @@ void UInventoryComponent::BeginPlay()
 	
 }
 
-
-void UInventoryComponent::OnRep_Coins(int32 OldCoins)
-{
-}
-
 int32 UInventoryComponent::GetCoins() const
 {
 	return Coins;
@@ -56,10 +51,94 @@ bool UInventoryComponent::RemoveCoins(int32 Ammount)
 	return false;
 }
 
+bool UInventoryComponent::CanAdd(const FName ItemId, const int32 Quantity) const
+{
+	return true; //for now
+}
+
+bool UInventoryComponent::CanRemove(const FName ItemId, const int32 Quantity) const
+{
+	if (ItemId == CoinsItemId) 
+	{
+		return Coins >= Quantity;
+	}
+
+	const FItem* Existing = Items.FindByPredicate([ItemId](FItem Item)
+		{
+			return Item.ItemId == ItemId;
+		});
+
+	return Existing && Existing->Quantity >= Quantity;	
+}
+
+int32 UInventoryComponent::Add(const FName ItemId, const int32 Quantity)
+{
+	if (ItemId == CoinsItemId)
+	{
+		AddCoins(Quantity);
+		return Quantity;
+	}
+
+	if (GetOwnerRole() != ROLE_Authority)
+	{
+		return 0;
+	}
+
+	FItem* Existing = Items.FindByPredicate([ItemId](FItem Item)
+		{
+			return Item.ItemId == ItemId;
+		});
+
+	if (Existing)
+	{
+		Existing->Quantity += Quantity;
+	}
+	else
+	{
+		Items.Add(FItem(ItemId, Quantity));
+	}
+
+	return Quantity;
+}
+
+int32 UInventoryComponent::Remove(const FName ItemId, const int32 Quantity)
+{
+	if (ItemId == CoinsItemId)
+	{
+		return RemoveCoins(Quantity) ? Quantity : 0;
+	}
+
+	if (GetOwnerRole() != ROLE_Authority)
+	{
+		return 0;
+	}
+
+	FItem* Existing = Items.FindByPredicate([ItemId](FItem Item)
+		{
+			return Item.ItemId == ItemId;
+		});
+
+	if (!Existing || Existing->Quantity < Quantity)
+	{
+		return 0;
+	}
+
+	Existing->Quantity -= Quantity;
+	if (Existing->Quantity == 0)
+	{
+		Items.RemoveAll([ItemId](FItem Item)
+			{
+				return Item.ItemId == ItemId;
+			});
+	}
+
+	return Quantity;
+}
+
 void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UInventoryComponent, Coins);
+	DOREPLIFETIME(UInventoryComponent, Items);
 }
-

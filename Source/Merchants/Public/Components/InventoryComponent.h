@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Items/Item.h"
 #include "InventoryComponent.generated.h"
 
 
@@ -20,11 +21,14 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(ReplicatedUsing = OnRep_Coins, BlueprintReadOnly, Category = "InventoryComponent")
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "InventoryComponent")
 	int32 Coins;
 
-	UFUNCTION()
-	void OnRep_Coins(int32 OldCoins);
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "InventoryComponent")
+	TArray<FItem> Items;
+
+	UPROPERTY(EditDefaultsOnly , Category = "InventoryComponent")
+	FName CoinsItemId;
 
 public:	
 
@@ -34,4 +38,8 @@ public:
 
 	bool RemoveCoins(int32 Ammount);
 		
+	bool CanAdd(const FName ItemId, const int32 Quantity) const;
+	bool CanRemove(const FName ItemId, const int32 Quantity) const;
+	int32 Add(const FName ItemId, const int32 Quantity);
+	int32 Remove(const FName ItemId, const int32 Quantity);
 };

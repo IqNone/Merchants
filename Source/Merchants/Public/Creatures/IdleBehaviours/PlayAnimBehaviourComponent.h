@@ -67,5 +67,14 @@ private:
 
 	void PlayEndMontage();
 	void OnEndMontageEnded();
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void NetMulticast_PlayMontage();
+
+	UFUNCTION(NetMulticast, Unreliable)
+	void NetMulticast_StopMontage();
+	
+	UFUNCTION(NetMulticast, Unreliable)
+	void NetMulticast_PlayEndMontage();
 };
 

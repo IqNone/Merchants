@@ -37,6 +37,10 @@ protected:
 
 	UFUNCTION()
 	void CombatOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(Server, Unreliable)
+	void DealDamage(AActor* OtherActor);
+
 public:	
 
 	void ActivateCollision();

@@ -14,6 +14,8 @@ UPlayAnimBehaviourComponent::UPlayAnimBehaviourComponent()
 	
 	bHasEndAnim = true;	
 	EndSectionName = "Default";
+
+	SetIsReplicatedByDefault(true);
 }
 
 void UPlayAnimBehaviourComponent::BeginPlay()
@@ -70,6 +72,8 @@ void UPlayAnimBehaviourComponent::PlayMontage()
 	AnimInstance->Montage_Play(AnimMontage, 1.f);
 	AnimInstance->Montage_JumpToSection(SectionName);
 
+	NetMulticast_PlayMontage();
+
 	float Seconds = FMath::RandRange(MinAnimSeconds, MaxAnimSeconds);
 
 	World->GetTimerManager().SetTimer(TimerHandle, this, &UPlayAnimBehaviourComponent::OnMontageEnded, Seconds, false);
@@ -84,6 +88,7 @@ void UPlayAnimBehaviourComponent::OnMontageEnded()
 	}
 
 	AnimInstance->Montage_Stop(0, AnimMontage);
+	NetMulticast_StopMontage();
 	PlayEndMontage();
 }
 
@@ -95,6 +100,7 @@ void UPlayAnimBehaviourComponent::PlayEndMontage()
 		bIsPlayingEnd = true;
 		float Duration = AnimInstance->Montage_Play(EndAnimMontage, 1.f);
 		AnimInstance->Montage_JumpToSection(EndSectionName);
+		NetMulticast_PlayEndMontage();
 		World->GetTimerManager().SetTimer(TimerHandle, this, &UPlayAnimBehaviourComponent::OnEndMontageEnded, Duration, false);
 	}
 	else
@@ -106,4 +112,30 @@ void UPlayAnimBehaviourComponent::PlayEndMontage()
 void UPlayAnimBehaviourComponent::OnEndMontageEnded()
 {
 	OnBehaviourEnd.Broadcast();
+}
+
+void UPlayAnimBehaviourComponent::NetMulticast_PlayMontage_Implementation()
+{
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_Play(AnimMontage, 1.f);
+		AnimInstance->Montage_JumpToSection(SectionName);
+	}
+}
+
+void UPlayAnimBehaviourComponent::NetMulticast_StopMontage_Implementation()
+{
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_Stop(0, AnimMontage);
+	}
+}
+
+void UPlayAnimBehaviourComponent::NetMulticast_PlayEndMontage_Implementation()
+{
+	if (AnimInstance)
+	{
+		AnimInstance->Montage_Play(EndAnimMontage, 1.f);
+		AnimInstance->Montage_JumpToSection(EndSectionName);
+	}
 }

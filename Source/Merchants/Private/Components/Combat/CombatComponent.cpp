@@ -10,6 +10,7 @@ UCombatComponent::UCombatComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
+	SetIsReplicatedByDefault(true);
 
 	// ...
 	ComboType = EAnimComboType::EACT_Random;
@@ -24,11 +25,12 @@ void UCombatComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	AMainCharacter* Owner = GetOwner<AMainCharacter>();
+	Owner = GetOwner<AMainCharacter>();
 	if (!Owner)
 	{
 		return;
 	}
+
 	AnimInstance = Owner->GetMesh()->GetAnimInstance();
 }
 
@@ -81,6 +83,7 @@ void UCombatComponent::PlayAnim()
 	{
 		AnimIndex = GetNextAnimIndex();
 		float Duration = AnimInstance->Montage_Play(Animations[AnimIndex]);
+		Server_PlayAnim(AnimIndex);
 		UWorld* World = GetWorld();
 		if (World)
 		{
@@ -91,6 +94,19 @@ void UCombatComponent::PlayAnim()
 	{
 		AnimEnd();
 	}
+}
+
+void UCombatComponent::NetMulticast_PlayAnim_Implementation(int32 Index)
+{
+	if (!Owner->GetController())
+	{
+		AnimInstance->Montage_Play(Animations[Index]);
+	}
+}
+
+void UCombatComponent::Server_PlayAnim_Implementation(int32 Index)
+{
+	NetMulticast_PlayAnim(Index);
 }
 
 int32 UCombatComponent::GetNextAnimIndex()

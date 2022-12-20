@@ -14,6 +14,7 @@ AWeapon::AWeapon()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+	bReplicates = true;
 
 	MeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComponent"));
 	RootComponent = MeshComponent;
@@ -30,7 +31,7 @@ AWeapon::AWeapon()
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	CombatCollision->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::CombatOnOverlapBegin);
 	CombatCollision->OnComponentEndOverlap.AddDynamic(this, &AWeapon::CombatOnOverlapEnd);
 }
@@ -40,7 +41,7 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 	if (OtherActor)
 	{
 		UE_LOG(LogTemp, Log, TEXT("hit: %s"), *OtherActor->StaticClass()->GetName());
-		UGameplayStatics::ApplyDamage(OtherActor, 30.f, GetOwner()->GetInstigatorController(), this, DamageType);
+		DealDamage(OtherActor);
 
 		ACombatCharacter* Target = Cast<ACombatCharacter>(OtherActor);
 		if (!Target)
@@ -69,4 +70,9 @@ void AWeapon::ActivateCollision()
 void AWeapon::DeactivateCollision()
 {
 	CombatCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void AWeapon::DealDamage_Implementation(AActor* OtherActor)
+{
+	UGameplayStatics::ApplyDamage(OtherActor, 30.f, GetOwner()->GetInstigatorController(), this, DamageType);
 }

@@ -64,3 +64,21 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int32 Quantity;
 };
+
+UINTERFACE(BlueprintType)
+class MERCHANTS_API UItemsHolder : public UInterface
+{
+	GENERATED_BODY()
+};
+
+class MERCHANTS_API IItemsHolder
+{
+	GENERATED_BODY()
+
+public:
+
+	virtual bool CanAdd(const FName ItemId, const int32 Quantity) const = 0;
+	virtual bool CanRemove(const FName ItemId, const int32 Quantity) const = 0;
+	virtual int32 Add(const FName ItemId, const int32 Quantity) = 0;
+	virtual int32 Remove(const FName ItemId, const int32 Quantity) = 0;
+};

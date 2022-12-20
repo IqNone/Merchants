@@ -120,7 +120,6 @@ protected:
 	UFUNCTION()
 	void HandleTakeDamage(UHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
 
-	UFUNCTION(Server, Reliable)
 	void DropLoot();
 
 	FVector GetLootBagLocation();
