@@ -12,6 +12,7 @@ UInventoryComponent::UInventoryComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
+	InventorySize = 72;
 
 	Coins = 0;
 
@@ -53,7 +54,17 @@ bool UInventoryComponent::RemoveCoins(int32 Ammount)
 
 bool UInventoryComponent::CanAdd(const FName ItemId, const int32 Quantity) const
 {
-	return true; //for now
+	if (ItemId == CoinsItemId)
+	{
+		return true;
+	}
+
+	const FItem* Existing = Items.FindByPredicate([ItemId](FItem Item)
+		{
+			return Item.ItemId == ItemId;
+		});
+
+	return Existing || Items.Num() < InventorySize;
 }
 
 bool UInventoryComponent::CanRemove(const FName ItemId, const int32 Quantity) const

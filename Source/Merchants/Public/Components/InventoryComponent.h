@@ -7,7 +7,6 @@
 #include "Items/Item.h"
 #include "InventoryComponent.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MERCHANTS_API UInventoryComponent : public UActorComponent
 {
@@ -20,6 +19,9 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "InventoryComponent")
+	int32 InventorySize;
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "InventoryComponent")
 	int32 Coins;
