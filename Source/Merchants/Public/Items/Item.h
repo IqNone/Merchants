@@ -77,6 +77,8 @@ class MERCHANTS_API IItemsHolder
 
 public:
 
+	virtual TArray<FItem> GetItems() const = 0;
+
 	virtual bool CanAdd(const FName ItemId, const int32 Quantity) const = 0;
 	virtual bool CanRemove(const FName ItemId, const int32 Quantity) const = 0;
 	virtual int32 Add(const FName ItemId, const int32 Quantity) = 0;

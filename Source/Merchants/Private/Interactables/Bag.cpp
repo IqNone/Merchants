@@ -26,6 +26,11 @@ void ABag::OnRep_Items(TArray<FItem> OldItems)
 	OnItemsChanged.Broadcast();
 }
 
+TArray<FItem> ABag::GetItems() const
+{
+	return Items;
+}
+
 bool ABag::CanAdd(const FName ItemId, const int32 Quantity) const
 {
 	return true;

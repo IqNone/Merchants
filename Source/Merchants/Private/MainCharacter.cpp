@@ -123,6 +123,9 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 		//Interacting
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AMainCharacter::Interact);
 
+		//Get All Items
+		EnhancedInputComponent->BindAction(GetAllAction, ETriggerEvent::Triggered, this, &AMainCharacter::GetAll);
+
 		//Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMainCharacter::Move);
 
@@ -209,6 +212,27 @@ void AMainCharacter::GiveItem_Implementation(const TScriptInterface<IItemsHolder
 	}
 }
 
+
+void AMainCharacter::GetAll_Implementation()
+{
+	UE_LOG(LogTemp, Warning, TEXT("GET ALL"));
+
+	IItemsHolder* Holder = Cast<IItemsHolder>(Interactable);
+	if (!Holder)
+	{
+		return;
+	}
+
+	TScriptInterface<IItemsHolder> Target;
+	Target.SetInterface(Holder);
+	Target.SetObject(Interactable);
+
+	for (FItem Item : Holder->GetItems())
+	{
+		TakeItem(Target, Item.ItemId, Item.Quantity);
+	}
+}
+
 void AMainCharacter::CheckInteractable()
 {
 	FVector Forward = GetFollowCamera()->GetComponentRotation().Vector();
@@ -273,6 +297,11 @@ void AMainCharacter::SetupWeapon()
 }
 
 // Start ItemsHolder implementation
+
+TArray<FItem> AMainCharacter::GetItems() const
+{
+	return InventoryComponent->GetItems();
+}
 
 bool AMainCharacter::CanAdd(const FName ItemId, const int32 Quantity) const
 {

@@ -44,4 +44,6 @@ public:
 	bool CanRemove(const FName ItemId, const int32 Quantity) const;
 	int32 Add(const FName ItemId, const int32 Quantity);
 	int32 Remove(const FName ItemId, const int32 Quantity);
+
+	FORCEINLINE TArray<FItem> GetItems() { return Items; }
 };

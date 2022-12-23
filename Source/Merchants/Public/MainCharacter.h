@@ -54,6 +54,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InteractAction;
 
+	/** Gell All Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* GetAllAction;
+
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
@@ -125,6 +129,7 @@ protected:
 public:
 
 	// ItemsHolder
+	virtual TArray<FItem> GetItems() const override;
 	virtual bool CanAdd(const FName ItemId, const int32 Quantity) const override;
 	virtual bool CanRemove(const FName ItemId, const int32 Quantity) const override;
 	virtual int32 Add(const FName ItemId, const int32 Quantity) override;
@@ -139,6 +144,9 @@ public:
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void GiveItem(const TScriptInterface<IItemsHolder>& Holder, const FName ItemId, const int32 Quantity);
+
+	UFUNCTION(Server, Reliable)
+	void GetAll();
 
 protected:
 	// APawn interface

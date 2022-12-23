@@ -37,6 +37,7 @@ public:
 	void OnRep_Items(TArray<FItem> OldItems);
 
 	// ItemsHolder
+	virtual TArray<FItem> GetItems() const override;
 	virtual bool CanAdd(const FName ItemId, const int32 Quantity) const override;
 	virtual bool CanRemove(const FName ItemId, const int32 Quantity) const override;
 	virtual int32 Add(const FName ItemId, const int32 Quantity) override;
