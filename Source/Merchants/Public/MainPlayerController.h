@@ -33,6 +33,7 @@ public:
 	void ToogleInventory();
 
 	void OpenBag();
+	void CloseBag();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnOpenBag();

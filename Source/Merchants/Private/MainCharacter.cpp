@@ -163,6 +163,11 @@ void AMainCharacter::Move(const FInputActionValue& Value)
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
 	}
+
+	if (MainPlayerController)
+	{
+		MainPlayerController->CloseBag();
+	}
 }
 
 void AMainCharacter::Look(const FInputActionValue& Value)

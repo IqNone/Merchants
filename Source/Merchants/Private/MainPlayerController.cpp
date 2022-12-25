@@ -64,3 +64,11 @@ void AMainPlayerController::OpenBag()
 		OnOpenBag();
 	}
 }
+
+void AMainPlayerController::CloseBag()
+{
+	if (GetLocalRole() != ROLE_AutonomousProxy || BagWidget)
+	{
+		BagWidget->SetVisibility(ESlateVisibility::Hidden);		
+	}
+}
