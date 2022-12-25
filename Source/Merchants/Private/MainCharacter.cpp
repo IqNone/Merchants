@@ -186,7 +186,7 @@ void AMainCharacter::Look(const FInputActionValue& Value)
 void AMainCharacter::ToogleInventory()
 {
 	if (MainPlayerController)
-	{
+	{		
 		MainPlayerController->ToogleInventory();
 	}
 }
@@ -196,6 +196,23 @@ void AMainCharacter::OpenBag()
 	if (MainPlayerController)
 	{
 		MainPlayerController->OpenBag();
+		Interactable->OnDestroyed.AddDynamic(this, &AMainCharacter::OnInteractibleDestroyed);
+	}
+}
+
+void AMainCharacter::CloseBag()
+{
+	if (MainPlayerController)
+	{
+		MainPlayerController->CloseBag();
+	}
+}
+
+void AMainCharacter::OnInteractibleDestroyed(AActor* DestroyedActor)
+{	
+	if (DestroyedActor == Interactable)
+	{
+		CloseBag();
 	}
 }
 
@@ -220,8 +237,6 @@ void AMainCharacter::GiveItem_Implementation(const TScriptInterface<IItemsHolder
 
 void AMainCharacter::GetAll_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("GET ALL"));
-
 	IItemsHolder* Holder = Cast<IItemsHolder>(Interactable);
 	if (!Holder)
 	{
@@ -235,7 +250,7 @@ void AMainCharacter::GetAll_Implementation()
 	for (FItem Item : Holder->GetItems())
 	{
 		TakeItem(Target, Item.ItemId, Item.Quantity);
-	}
+	}	
 }
 
 void AMainCharacter::CheckInteractable()

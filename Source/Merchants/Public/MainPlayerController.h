@@ -46,6 +46,12 @@ private:
 	UWidget* InventoryWidget;
 	UWidget* BagWidget;
 
+private:
+	int32 OpenedWindows;
+
+	UFUNCTION(BlueprintCallable)
+	void HandleWindowVisibility(bool bOpened);
+
 public:
 
 	UFUNCTION(BlueprintPure)

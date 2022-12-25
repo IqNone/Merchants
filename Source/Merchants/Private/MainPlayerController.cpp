@@ -8,10 +8,11 @@ void AMainPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FInputModeGameAndUI InputMode;
+	//SetInputMode(FInputModeGameAndUI());
+	//bShowMouseCursor = false;
 
-	SetInputMode(InputMode);
-	bShowMouseCursor = true;
+	OpenedWindows = 0;
+
 	//bEnableClickEvents = true;
 	//bEnableMouseOverEvents = true;	
 
@@ -49,26 +50,55 @@ void AMainPlayerController::ToogleInventory()
 	if (InventoryWidget->IsVisible())
 	{
 		InventoryWidget->SetVisibility(ESlateVisibility::Hidden);
+		HandleWindowVisibility(false);
 	}
 	else
 	{
 		InventoryWidget->SetVisibility(ESlateVisibility::Visible);
+		HandleWindowVisibility(true);
 	}
 }
 
 void AMainPlayerController::OpenBag()
 {
-	if (GetLocalRole() != ROLE_AutonomousProxy || BagWidget)
+	if (GetLocalRole() == ROLE_AutonomousProxy && BagWidget && !BagWidget->IsVisible())
 	{
 		BagWidget->SetVisibility(ESlateVisibility::Visible);
+		HandleWindowVisibility(true);
 		OnOpenBag();
 	}
 }
 
 void AMainPlayerController::CloseBag()
 {
-	if (GetLocalRole() != ROLE_AutonomousProxy || BagWidget)
+	if (GetLocalRole() == ROLE_AutonomousProxy && BagWidget && BagWidget->IsVisible())
 	{
-		BagWidget->SetVisibility(ESlateVisibility::Hidden);		
+		BagWidget->SetVisibility(ESlateVisibility::Hidden);
+		HandleWindowVisibility(false);
 	}
+}
+
+void AMainPlayerController::HandleWindowVisibility(bool bOpened)
+{
+	if (bOpened)
+	{
+		++OpenedWindows;
+	}
+	else
+	{
+		--OpenedWindows;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Opened Windows: %d"), OpenedWindows);
+
+	if (OpenedWindows == 0)
+	{
+		SetInputMode(FInputModeGameOnly());
+		bShowMouseCursor = false;
+	}
+	else
+	{
+		SetInputMode(FInputModeGameAndUI());
+		bShowMouseCursor = true;
+	}	
 }

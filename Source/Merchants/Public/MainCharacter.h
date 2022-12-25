@@ -138,6 +138,10 @@ public:
 
 	void ToogleInventory();
 	void OpenBag();
+	void CloseBag();
+
+	UFUNCTION()
+	void OnInteractibleDestroyed(AActor* DestroyedActor);
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void TakeItem(const TScriptInterface<IItemsHolder>& Holder, const FName ItemId, const int32 Quantity);
