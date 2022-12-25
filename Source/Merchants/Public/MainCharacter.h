@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Items/Item.h"
+#include "Navigation/CrowdAgentInterface.h"
 #include "MainCharacter.generated.h"
 
 class AWeapon;
@@ -26,7 +27,7 @@ enum class ECombatMode : uint8
 };
 
 UCLASS(config = Game)
-class AMainCharacter : public ACharacter, public IItemsHolder
+class AMainCharacter : public ACharacter, public IItemsHolder, public ICrowdAgentInterface
 {
 	GENERATED_BODY()
 
@@ -162,6 +163,17 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupWeapon();
+
+public:
+	// ICrowdAgentInterface BEGIN
+	virtual FVector GetCrowdAgentLocation() const override;
+	virtual FVector GetCrowdAgentVelocity() const override;
+	virtual void GetCrowdAgentCollisions(float& CylinderRadius, float& CylinderHalfHeight) const override;
+	virtual float GetCrowdAgentMaxSpeed() const override;
+	virtual int32 GetCrowdAgentAvoidanceGroup() const override;
+	virtual int32 GetCrowdAgentGroupsToAvoid() const override;
+	virtual int32 GetCrowdAgentGroupsToIgnore() const override;
+	// ICrowdAgentInterface END
 
 public:
 	/** Returns CameraBoom subobject **/

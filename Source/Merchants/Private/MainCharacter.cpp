@@ -345,6 +345,46 @@ int32 AMainCharacter::Remove(const FName ItemId, const int32 Quantity)
 
 // End ItemsHolder implementation
 
+// ICrowdAgentInterface BEGIN
+FVector AMainCharacter::GetCrowdAgentLocation() const
+{
+	return GetCharacterMovement() ? GetCharacterMovement()->GetActorFeetLocation() : FVector::ZeroVector;
+}
+
+FVector AMainCharacter::GetCrowdAgentVelocity() const
+{
+	return GetCharacterMovement() ? GetCharacterMovement()->Velocity : FVector::ZeroVector;
+}
+
+void AMainCharacter::GetCrowdAgentCollisions(float& CylinderRadius, float& CylinderHalfHeight) const
+{
+	if (GetCharacterMovement() && GetCharacterMovement()->UpdatedComponent)
+	{
+		GetCharacterMovement()->UpdatedComponent->CalcBoundingCylinder(CylinderRadius, CylinderHalfHeight);
+	}
+}
+
+float AMainCharacter::GetCrowdAgentMaxSpeed() const
+{
+	return GetCharacterMovement() ? GetCharacterMovement()->GetMaxSpeed() : 0;
+}
+
+int32 AMainCharacter::GetCrowdAgentAvoidanceGroup() const
+{
+	return GetCharacterMovement() ? GetCharacterMovement()->GetAvoidanceGroupMask() : 0;
+}
+
+int32 AMainCharacter::GetCrowdAgentGroupsToAvoid() const
+{
+	return GetCharacterMovement() ? GetCharacterMovement()->GetGroupsToAvoidMask() : 0;
+}
+int32 AMainCharacter::GetCrowdAgentGroupsToIgnore() const
+{
+	return GetCharacterMovement() ? GetCharacterMovement()->GetGroupsToIgnoreMask() : 0;
+}
+
+// ICrowdAgentInterface END
+
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
