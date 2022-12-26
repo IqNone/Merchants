@@ -20,5 +20,5 @@ void AOpenable::BeginPlay()
 
 void AOpenable::Interact(AMainCharacter* Player)
 {
-	Player->SetActorLocationAndRotation(NewLocation, NewRotation);
+	Player->SetLocationAndRotation(NewLocation, NewRotation);
 }

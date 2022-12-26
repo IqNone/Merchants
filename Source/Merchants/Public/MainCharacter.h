@@ -67,6 +67,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+	/** Zoom Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ZoomAction;
+
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ToogleInventoryAction;
@@ -96,6 +100,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UInventoryComponent* InventoryComponent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera|Zoom", meta = (AllowPrivateAccess = "true"))
+	float CameraMinZoom;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera|Zoom", meta = (AllowPrivateAccess = "true"))
+	float CameraMaxZoom;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera|Zoom", meta = (AllowPrivateAccess = "true"))
+	float ZoomSpeed;
+
+	float ZoomTarget;
+
 	bool bRotateToTarget;
 
 private:
@@ -121,6 +136,9 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	/** Called for looking input */
+	void Zoom(const FInputActionValue& Value);
 
 	void Interact();
 
@@ -152,6 +170,9 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void GetAll();
+
+	UFUNCTION(Server, Unreliable)
+	void SetLocationAndRotation(FVector NewLocation, FRotator NewRotation);
 
 protected:
 	// APawn interface

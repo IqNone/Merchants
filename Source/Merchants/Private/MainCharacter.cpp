@@ -46,10 +46,16 @@ AMainCharacter::AMainCharacter()
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
+	// Camera arm length clamp
+	CameraMinZoom = 100.f;
+	CameraMaxZoom = 1200.f;
+	ZoomSpeed = 150.f;
+	ZoomTarget = 400.f;
+
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 400.f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// Create a follow camera
@@ -86,7 +92,7 @@ void AMainCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-
+	
 	GetWorldTimerManager().SetTimer(InteractableCheckTimer, this, &AMainCharacter::CheckInteractable, .5f, true);
 
 	SetupWeapon();
@@ -105,6 +111,11 @@ void AMainCharacter::Tick(float DeltaTime)
 		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, 15.f);
 
 		SetActorRotation(InterpRotation);
+	}
+
+	if (ZoomTarget != CameraBoom->TargetArmLength)
+	{
+		CameraBoom->TargetArmLength = FMath::FInterpTo(CameraBoom->TargetArmLength, ZoomTarget, DeltaTime, 10.f);
 	}
 }
 
@@ -131,6 +142,9 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMainCharacter::Look);
+
+		//Zooming
+		EnhancedInputComponent->BindAction(ZoomAction, ETriggerEvent::Triggered, this, &AMainCharacter::Zoom);
 
 		//Attacking
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AMainCharacter::Attack);
@@ -181,6 +195,11 @@ void AMainCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AMainCharacter::Zoom(const FInputActionValue& Value)
+{
+	ZoomTarget = FMath::Clamp(ZoomTarget - ZoomSpeed * Value.Get<float>(), CameraMinZoom, CameraMaxZoom);
 }
 
 void AMainCharacter::ToogleInventory()
@@ -251,6 +270,11 @@ void AMainCharacter::GetAll_Implementation()
 	{
 		TakeItem(Target, Item.ItemId, Item.Quantity);
 	}	
+}
+
+void AMainCharacter::SetLocationAndRotation_Implementation(FVector NewLocation, FRotator NewRotation)
+{
+	SetActorLocationAndRotation(NewLocation, NewRotation);
 }
 
 void AMainCharacter::CheckInteractable()
