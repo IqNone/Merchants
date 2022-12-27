@@ -14,6 +14,3 @@ class AMerchantsGameMode : public AGameModeBase
 public:
 	AMerchantsGameMode();
 };
-
-
-
