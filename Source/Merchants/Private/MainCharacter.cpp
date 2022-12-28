@@ -223,7 +223,7 @@ void AMainCharacter::ToogleMinimap()
 
 void AMainCharacter::OpenBag()
 {
-	if (MainPlayerController)
+	if (MainPlayerController && Interactable)
 	{
 		MainPlayerController->OpenBag();
 		Interactable->OnDestroyed.AddDynamic(this, &AMainCharacter::OnInteractibleDestroyed);

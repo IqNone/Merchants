@@ -25,7 +25,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction")
 	FText InterationName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Interaction")
 	FText InteractionDescription;
 
 private:

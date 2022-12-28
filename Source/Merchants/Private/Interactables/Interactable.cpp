@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/BillboardComponent.h"
 #include "MainCharacter.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AInteractable::AInteractable()
@@ -17,6 +18,8 @@ AInteractable::AInteractable()
 
 	Billboard = CreateDefaultSubobject<UBillboardComponent>(TEXT("Billboard"));
 	Billboard->SetupAttachment(GetRootComponent());
+
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
@@ -29,3 +32,9 @@ void AInteractable::Interact(AMainCharacter* Player)
 {
 }
 
+void AInteractable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AInteractable, InteractionDescription);
+}
