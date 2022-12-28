@@ -71,9 +71,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ZoomAction;
 
-	/** Look Input Action */
+	/** Toogle Inventory Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ToogleInventoryAction;
+
+	/** Toogle Minimap Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ToogleMinimapAction;
 
 	/** Attack Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -156,6 +160,7 @@ public:
 	//------------------
 
 	void ToogleInventory();
+	void ToogleMinimap();
 	void OpenBag();
 	void CloseBag();
 

@@ -26,11 +26,15 @@ public:
 	FName InventoryWidgetName;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")
+	FName MinimapWidgetName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")
 	FName BagWidgetName;
 
 public:
 
 	void ToogleInventory();
+	void ToogleMinimap();
 
 	void OpenBag();
 	void CloseBag();
@@ -44,6 +48,7 @@ protected:
 private:
 	UUserWidget* MainHUDWidget;
 	UWidget* InventoryWidget;
+	UWidget* MinimapWidget;
 	UWidget* BagWidget;
 
 private:

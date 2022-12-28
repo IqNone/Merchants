@@ -36,7 +36,8 @@ void AMainPlayerController::BeginPlay()
 		return;
 	}
 
-	InventoryWidget = MainHUDWidget->GetWidgetFromName(InventoryWidgetName);	
+	InventoryWidget = MainHUDWidget->GetWidgetFromName(InventoryWidgetName);
+	MinimapWidget = MainHUDWidget->GetWidgetFromName(MinimapWidgetName);
 	BagWidget = MainHUDWidget->GetWidgetFromName(BagWidgetName);
 }
 
@@ -56,6 +57,23 @@ void AMainPlayerController::ToogleInventory()
 	{
 		InventoryWidget->SetVisibility(ESlateVisibility::Visible);
 		HandleWindowVisibility(true);
+	}
+}
+
+void AMainPlayerController::ToogleMinimap()
+{
+	if (GetLocalRole() != ROLE_AutonomousProxy || !MinimapWidget)
+	{
+		return;
+	}
+
+	if (MinimapWidget->IsVisible())
+	{
+		MinimapWidget->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		MinimapWidget->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 
@@ -88,8 +106,6 @@ void AMainPlayerController::HandleWindowVisibility(bool bOpened)
 	{
 		--OpenedWindows;
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Opened Windows: %d"), OpenedWindows);
 
 	if (OpenedWindows == 0)
 	{

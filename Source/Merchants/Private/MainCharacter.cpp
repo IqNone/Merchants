@@ -150,8 +150,11 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AMainCharacter::Attack);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Completed, this, &AMainCharacter::StopAttack);
 
-		//Toogle
+		//Toogle Inventory
 		EnhancedInputComponent->BindAction(ToogleInventoryAction, ETriggerEvent::Triggered, this, &AMainCharacter::ToogleInventory);
+
+		//Toogle Minimap
+		EnhancedInputComponent->BindAction(ToogleMinimapAction, ETriggerEvent::Triggered, this, &AMainCharacter::ToogleMinimap);
 	}
 
 }
@@ -207,6 +210,14 @@ void AMainCharacter::ToogleInventory()
 	if (MainPlayerController)
 	{		
 		MainPlayerController->ToogleInventory();
+	}
+}
+
+void AMainCharacter::ToogleMinimap()
+{
+	if (MainPlayerController)
+	{
+		MainPlayerController->ToogleMinimap();
 	}
 }
 
