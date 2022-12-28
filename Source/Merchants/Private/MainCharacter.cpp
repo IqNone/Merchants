@@ -155,6 +155,10 @@ void AMainCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 
 		//Toogle Minimap
 		EnhancedInputComponent->BindAction(ToogleMinimapAction, ETriggerEvent::Triggered, this, &AMainCharacter::ToogleMinimap);
+
+		//Force show mouse
+		EnhancedInputComponent->BindAction(ShowMouseAction, ETriggerEvent::Triggered, this, &AMainCharacter::ShowMouse);
+		EnhancedInputComponent->BindAction(ShowMouseAction, ETriggerEvent::Completed, this, &AMainCharacter::StopShowingMouse);
 	}
 
 }
@@ -264,7 +268,6 @@ void AMainCharacter::GiveItem_Implementation(const TScriptInterface<IItemsHolder
 	}
 }
 
-
 void AMainCharacter::GetAll_Implementation()
 {
 	IItemsHolder* Holder = Cast<IItemsHolder>(Interactable);
@@ -299,8 +302,6 @@ void AMainCharacter::CheckInteractable()
 	FCollisionQueryParams QueryParams;	
 
 	GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, ObjectParams, QueryParams);
-
-	//UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *(Hit.GetActor()->GetName()));
 	
 	Interactable = Cast<AInteractable>(Hit.GetActor());
 }
@@ -323,6 +324,22 @@ void AMainCharacter::StopAttack()
 {
 	bRotateToTarget = false;
 	CombatComponents[CombatMode]->StopAttack();
+}
+
+void AMainCharacter::ShowMouse()
+{
+	if (MainPlayerController)
+	{
+		MainPlayerController->ShowMouse();
+	}
+}
+
+void AMainCharacter::StopShowingMouse()
+{
+	if (MainPlayerController)
+	{
+		MainPlayerController->StopShowingMouse();
+	}
 }
 
 void AMainCharacter::SetupWeapon()

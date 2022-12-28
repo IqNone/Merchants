@@ -12,6 +12,7 @@ void AMainPlayerController::BeginPlay()
 	//bShowMouseCursor = false;
 
 	OpenedWindows = 0;
+	bForceShowingMouse = false;
 
 	//bEnableClickEvents = true;
 	//bEnableMouseOverEvents = true;	
@@ -107,7 +108,24 @@ void AMainPlayerController::HandleWindowVisibility(bool bOpened)
 		--OpenedWindows;
 	}
 
-	if (OpenedWindows == 0)
+	SetMouseVisibility();
+}
+
+void AMainPlayerController::ShowMouse()
+{
+	bForceShowingMouse = true;
+	SetMouseVisibility();
+}
+
+void AMainPlayerController::StopShowingMouse()
+{
+	bForceShowingMouse = false;
+	SetMouseVisibility();
+}
+
+void AMainPlayerController::SetMouseVisibility()
+{
+	if (OpenedWindows == 0 && !bForceShowingMouse)
 	{
 		SetInputMode(FInputModeGameOnly());
 		bShowMouseCursor = false;
@@ -116,5 +134,5 @@ void AMainPlayerController::HandleWindowVisibility(bool bOpened)
 	{
 		SetInputMode(FInputModeGameAndUI());
 		bShowMouseCursor = true;
-	}	
+	}
 }

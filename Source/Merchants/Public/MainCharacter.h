@@ -79,6 +79,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ToogleMinimapAction;
 
+	/** Force Mouse Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ShowMouseAction;
+
 	/** Attack Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* AttackAction;
@@ -143,6 +147,10 @@ protected:
 
 	/** Called for looking input */
 	void Zoom(const FInputActionValue& Value);
+
+	/** Force showing the mouse */
+	void ShowMouse();
+	void StopShowingMouse();
 
 	void Interact();
 

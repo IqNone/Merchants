@@ -42,6 +42,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnOpenBag();
 
+	void ShowMouse();
+	void StopShowingMouse();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -53,13 +56,15 @@ private:
 
 private:
 	int32 OpenedWindows;
+	bool bForceShowingMouse;
 
 	UFUNCTION(BlueprintCallable)
 	void HandleWindowVisibility(bool bOpened);
+
+	void SetMouseVisibility();
 
 public:
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UUserWidget* GetMainHUDWidget() { return MainHUDWidget; }
-
 };
