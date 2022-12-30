@@ -3,19 +3,16 @@
 
 #include "MainPlayerController.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/AttributesComponent.h"
 
 void AMainPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//SetInputMode(FInputModeGameAndUI());
-	//bShowMouseCursor = false;
-
 	OpenedWindows = 0;
 	bForceShowingMouse = false;
 
-	//bEnableClickEvents = true;
-	//bEnableMouseOverEvents = true;	
+	AttributesComponent = CreateDefaultSubobject<UAttributesComponent>("AttributesComponent");
 
 	if (GetLocalRole() != ROLE_AutonomousProxy)
 	{
