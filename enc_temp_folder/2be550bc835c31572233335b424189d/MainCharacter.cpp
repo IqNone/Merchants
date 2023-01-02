@@ -553,11 +553,6 @@ void AMainCharacter::DeactivateRightPunchCollision()
 
 void AMainCharacter::PunchOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor == this)
-	{
-		return;
-	}
-
 	CombatTarget = Cast<ACombatCharacter>(OtherActor);
 
 	if (CombatTarget)

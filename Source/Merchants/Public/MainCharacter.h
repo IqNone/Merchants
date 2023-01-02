@@ -16,6 +16,7 @@ class AInteractable;
 class UCombatComponent;
 class UInventoryComponent;
 class UAttributesComponent;
+class UDamageType;
 
 UENUM(BlueprintType)
 enum class ECombatMode : uint8
@@ -43,6 +44,21 @@ public:
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	/** Punch Components */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* RightPunchSphere;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	FName RightPunchSphereSocketName;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* LeftPunchSphere;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	FName LeftPunchSphereSocketName;
+
+	/***/
 
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -94,17 +110,23 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Interact, meta = (AllowPrivateAccess = "true"))
 	AInteractable* Interactable;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapon", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Equipment|Weapon", meta = (AllowPrivateAccess = "true"))
 	FName WeaponSocketName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment|Weapon", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Equipment|Weapon", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AWeapon> WeaponClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components|Combat", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat|Components", meta = (AllowPrivateAccess = "true"))
 	UCombatComponent* OneHandedCombatComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat|Components", meta = (AllowPrivateAccess = "true"))
+	UCombatComponent* UnarmedCombatComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	ACombatCharacter* CombatTarget;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	TSubclassOf<UDamageType> DamageType;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UInventoryComponent* InventoryComponent;
@@ -226,6 +248,19 @@ public:
 	virtual FText GetCharacterName() const override;
 	virtual ECharacterType GetCharacterType() const override;
 	virtual FCombatStats* GetCombatStats() const override;
+
+public:
+
+	void ActivateLeftPunchCollistion();
+	void DeactivateLeftPunchCollistion();
+	void ActivateRightPunchCollision();
+	void DeactivateRightPunchCollision();
+
+	UFUNCTION()
+	void PunchOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(Server, Unreliable)
+	void DealDamage(ACombatCharacter* OtherActor);
 
 public:
 	/** Returns CameraBoom subobject **/

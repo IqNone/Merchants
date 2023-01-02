@@ -55,6 +55,6 @@ int32 GameplayUtils::CalculateDamage(FCombatStats* Attacker, FCombatStats* Defen
 		- Defender->Defence / 10 - Defender->Toughness / 2
 		- FMath::RandRange(Defender->MinArmor, Defender->MaxArmor)
 
-		// Max it fun!
+		// Make it fun!
 		+ FMath::RandRange(-2, 9);
 }

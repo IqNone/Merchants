@@ -79,7 +79,7 @@ void UCombatComponent::AnimEnd()
 
 void UCombatComponent::PlayAnim()
 {
-	if (AnimInstance)
+	if (AnimInstance && Animations.Num())
 	{
 		AnimIndex = GetNextAnimIndex();
 		float Duration = AnimInstance->Montage_Play(Animations[AnimIndex]);
