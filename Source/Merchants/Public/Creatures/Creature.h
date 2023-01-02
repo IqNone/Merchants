@@ -56,7 +56,7 @@ struct FCreatureData : public FTableRowBase
 public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Display)
-	FText Name;
+	FText Name;	
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Spawn)
 	float RespawnSeconds;
@@ -66,6 +66,30 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
 	float Health;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
+	int32 Attack;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
+	int32 Defence;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
+	int32 Might;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
+	int32 Toughness;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
+	int32 Reaction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
+	int32 Dexterity;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
+	int32 MinArmor;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
+	int32 MaxArmor;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
 	float WalkSpeed;
@@ -113,9 +137,14 @@ public:
 private:
 	FCreatureData* CreatureData;
 
+	FCombatStats* CombatStats;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// Called before destroying the object
+	virtual void BeginDestroy() override;
 
 	UFUNCTION()
 	void HandleTakeDamage(UHealthComponent* OwningHealthComp, float Health, float HealthDelta, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);
@@ -144,6 +173,8 @@ public:
 	virtual float GetMaxHealth() const override;
 	virtual float GetHealth() const override;
 	virtual FText GetCharacterName() const override;
+	virtual ECharacterType GetCharacterType() const override;
+	virtual FCombatStats* GetCombatStats() const override;
 
 	// spawn
 	float GetRespawnSeconds() const;

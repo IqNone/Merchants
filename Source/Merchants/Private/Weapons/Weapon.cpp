@@ -4,10 +4,11 @@
 #include "Weapons/Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/DamageType.h"
-#include "Kismet/GameplayStatics.h"
+#include "Gameplay/GameplayUtils.h"
 #include "Components/BoxComponent.h"
 #include "CombatCharacter.h"
 #include "MainCharacter.h"
+#include "Components/AttributesComponent.h"
 
 // Sets default values
 AWeapon::AWeapon()
@@ -27,6 +28,24 @@ AWeapon::AWeapon()
 	CombatCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 }
 
+void AWeapon::OnEquipped()
+{
+	if (AMainCharacter* MainCharacter = Cast<AMainCharacter>(GetOwner()))
+	{
+		MainCharacter->AttributesComponent->ChangeModMinDamageBy(15);
+		MainCharacter->AttributesComponent->ChangeModMaxDamageBy(30);
+	}
+}
+
+void AWeapon::OnUnequipped()
+{
+	if (AMainCharacter* MainCharacter = Cast<AMainCharacter>(GetOwner()))
+	{
+		MainCharacter->AttributesComponent->ChangeModMinDamageBy(-15);
+		MainCharacter->AttributesComponent->ChangeModMaxDamageBy(-30);
+	}
+}
+
 // Called when the game starts or when spawned
 void AWeapon::BeginPlay()
 {
@@ -40,7 +59,6 @@ void AWeapon::CombatOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AAc
 {
 	if (OtherActor)
 	{
-		UE_LOG(LogTemp, Log, TEXT("hit: %s"), *OtherActor->StaticClass()->GetName());
 		DealDamage(OtherActor);
 
 		ACombatCharacter* Target = Cast<ACombatCharacter>(OtherActor);
@@ -74,5 +92,5 @@ void AWeapon::DeactivateCollision()
 
 void AWeapon::DealDamage_Implementation(AActor* OtherActor)
 {
-	UGameplayStatics::ApplyDamage(OtherActor, 30.f, GetOwner()->GetInstigatorController(), this, DamageType);
+	GameplayUtils::TryHit(Cast<ACombatCharacter>(GetOwner()), Cast<ACombatCharacter>(OtherActor), GetOwner()->GetInstigatorController(), DamageType);
 }

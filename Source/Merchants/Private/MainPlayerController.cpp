@@ -3,7 +3,10 @@
 
 #include "MainPlayerController.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/AttributesComponent.h"
+
+AMainPlayerController::AMainPlayerController()
+{
+}
 
 void AMainPlayerController::BeginPlay()
 {
@@ -11,8 +14,6 @@ void AMainPlayerController::BeginPlay()
 
 	OpenedWindows = 0;
 	bForceShowingMouse = false;
-
-	AttributesComponent = CreateDefaultSubobject<UAttributesComponent>("AttributesComponent");
 
 	if (GetLocalRole() != ROLE_AutonomousProxy)
 	{

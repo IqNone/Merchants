@@ -16,6 +16,7 @@
 #include "CombatCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/InventoryComponent.h"
+#include "Components/AttributesComponent.h"
 #include "Items/Item.h"
 #include "Net/UnrealNetwork.h"
 
@@ -75,7 +76,19 @@ AMainCharacter::AMainCharacter()
 
 	CombatComponents.Add(ECombatMode::ECM_OneHanded, OneHandedCombatComponent);
 
-	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));	
+
+	// Don't create the attributes component on "other" clients
+	if (GetLocalRole() != ROLE_SimulatedProxy)
+	{
+		AttributesComponent = CreateDefaultSubobject<UAttributesComponent>("AttributesComponent");
+	}
+
+	if (GetLocalRole() == ROLE_Authority)
+	{
+		// Only on server
+		CombatStats = new FCombatStats();
+	}
 }
 
 void AMainCharacter::BeginPlay()
@@ -96,6 +109,16 @@ void AMainCharacter::BeginPlay()
 	GetWorldTimerManager().SetTimer(InteractableCheckTimer, this, &AMainCharacter::CheckInteractable, .5f, true);
 
 	SetupWeapon();
+}
+
+void AMainCharacter::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	if (CombatStats)
+	{
+		delete CombatStats;
+	}
 }
 
 // Called every frame
@@ -351,6 +374,7 @@ void AMainCharacter::SetupWeapon()
 
 	if (CurrentWeapon)
 	{
+		CurrentWeapon->OnUnequipped();
 		CurrentWeapon->Destroy();
 		CurrentWeapon = nullptr;
 	}
@@ -365,6 +389,7 @@ void AMainCharacter::SetupWeapon()
 	{
 		CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponSocketName);
 		CurrentWeapon->SetOwner(this);
+		CurrentWeapon->OnEquipped();
 	}
 }
 
@@ -436,6 +461,50 @@ int32 AMainCharacter::GetCrowdAgentGroupsToIgnore() const
 }
 
 // ICrowdAgentInterface END
+
+// CombatCharacter START
+float AMainCharacter::GetMaxHealth() const
+{
+	return 100;
+}
+
+float AMainCharacter::GetHealth() const
+{
+	return 100;
+}
+
+FText AMainCharacter::GetCharacterName() const
+{
+	return FText();
+}
+
+ECharacterType AMainCharacter::GetCharacterType() const
+{
+	return ECharacterType::ECT_Player;
+}
+
+FCombatStats* AMainCharacter::GetCombatStats() const
+{
+	if (!CombatStats)
+	{
+		return nullptr;
+	}
+
+	CombatStats->Attack = AttributesComponent->GetAttack();
+	CombatStats->Defence = AttributesComponent->GetDefense();
+	CombatStats->Might = AttributesComponent->GetMight();
+	CombatStats->Toughness = AttributesComponent->GetToughness();
+	CombatStats->MinExtraDamage = AttributesComponent->GetModMinDamage();
+	CombatStats->MaxExtraDamage = AttributesComponent->GetModMaxDamage();
+	CombatStats->MinArmor = AttributesComponent->GetModMinArmor();
+	CombatStats->MaxArmor = AttributesComponent->GetModMaxArmor();
+	CombatStats->Reaction = AttributesComponent->GetReaction();
+	CombatStats->Dexterity = AttributesComponent->GetDexterity();
+
+	return CombatStats;
+}
+//CombatCharacter END
+
 
 void AMainCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

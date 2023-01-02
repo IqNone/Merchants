@@ -12,12 +12,23 @@ UAttributesComponent::UAttributesComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
+	MinValue = 4;
+	MaxValue = 52;
+
 	Physique = MinValue;
 	Coordination = MinValue;
 	Reasoning = MinValue;
 	Will = MinValue;
 	Instinct = MinValue;
 	Vitality = MinValue;
+
+	Attack = 7;
+	Defense = 7;
+
+	ModMinArmor = 0;
+	ModMaxArmor = 0;
+	ModMinDamage = 0;
+	ModMaxDamage = 0;
 }
 
 
@@ -27,7 +38,7 @@ void UAttributesComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	ReEvaluateAll();
+	ReEvaluateBasicAttributes();
 }
 
 
@@ -42,40 +53,60 @@ void UAttributesComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 void UAttributesComponent::ChangePhysiqueBy_Implementation(int Delta)
 {
 	Physique += Delta;
-	ReEvaluateAll();
+	ReEvaluateBasicAttributes();
 }
 
 void UAttributesComponent::ChangeCoordinationBy_Implementation(int Delta)
 {
 	Coordination += Delta;
-	ReEvaluateAll();
+	ReEvaluateBasicAttributes();
 }
 
 void UAttributesComponent::ChangeReasoningBy_Implementation(int Delta)
 {
 	Reasoning += Delta;
-	ReEvaluateAll();
+	ReEvaluateBasicAttributes();
 }
 
 void UAttributesComponent::ChangeWillBy_Implementation(int Delta)
 {
 	Will += Delta;
-	ReEvaluateAll();
+	ReEvaluateBasicAttributes();
 }
 
 void UAttributesComponent::ChangeInstinctBy_Implementation(int Delta)
 {
 	Instinct += Delta;
-	ReEvaluateAll();
+	ReEvaluateBasicAttributes();
 }
 
 void UAttributesComponent::ChangeVitalityBy_Implementation(int Delta)
 {
 	Vitality += Delta;
-	ReEvaluateAll();
+	ReEvaluateBasicAttributes();
 }
 
-void UAttributesComponent::ReEvaluateAll()
+void UAttributesComponent::ChangeModMinDamageBy_Implementation(int Delta)
+{
+	ModMinDamage += Delta;
+}
+
+void UAttributesComponent::ChangeModMaxDamageBy_Implementation(int Delta)
+{
+	ModMaxDamage += Delta;
+}
+
+void UAttributesComponent::ChangeModMinArmorBy_Implementation(int Delta)
+{
+	ModMinArmor += Delta;
+}
+
+void UAttributesComponent::ChangeModMaxArmorBy_Implementation(int Delta)
+{
+	ModMaxArmor += Delta;
+}
+
+void UAttributesComponent::ReEvaluateBasicAttributes()
 {
 	Might = (Physique + Coordination) / 2;
 	Matter = (Physique + Will) / 2;
@@ -109,4 +140,12 @@ void UAttributesComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	DOREPLIFETIME(UAttributesComponent, Will);
 	DOREPLIFETIME(UAttributesComponent, Instinct);
 	DOREPLIFETIME(UAttributesComponent, Vitality);
+
+	DOREPLIFETIME(UAttributesComponent, Attack);
+	DOREPLIFETIME(UAttributesComponent, Defense);
+
+	DOREPLIFETIME(UAttributesComponent, ModMinArmor);
+	DOREPLIFETIME(UAttributesComponent, ModMaxArmor);
+	DOREPLIFETIME(UAttributesComponent, ModMinDamage);
+	DOREPLIFETIME(UAttributesComponent, ModMaxDamage);
 }

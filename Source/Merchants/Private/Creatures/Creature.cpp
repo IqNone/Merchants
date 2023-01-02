@@ -57,11 +57,32 @@ void ACreature::BeginPlay()
 		SetMaxSpeed(CreatureData->WalkSpeed);
 	}
 
+	if (CreatureData)
+	{
+		CombatStats = new FCombatStats();
+		CombatStats->Attack = CreatureData->Attack;
+		CombatStats->Defence = CreatureData->Defence;
+		CombatStats->Might = CreatureData->Might;
+		CombatStats->Toughness = CreatureData->Toughness;
+		CombatStats->MinArmor = CreatureData->MaxArmor;
+		CombatStats->Reaction = CreatureData->Reaction;
+		CombatStats->Dexterity = CreatureData->Dexterity;
+	}
+
 	TInlineComponentArray<UIdleBehaviourComponent*> Components(this);
 	GetComponents<UIdleBehaviourComponent>(Components);
 
 	IdleManager->SetComponents(Components);
 	IdleManager->Start();
+}
+
+void ACreature::BeginDestroy()
+{
+	Super::BeginDestroy();
+	if (CombatStats)
+	{
+		delete CombatStats;
+	}
 }
 
 // Called every frame
@@ -196,6 +217,18 @@ FText ACreature::GetCharacterName() const
 	return FText();
 }
 
+ECharacterType ACreature::GetCharacterType() const
+{
+	return ECharacterType::ECT_Creature;
+}
+
+FCombatStats* ACreature::GetCombatStats() const
+{
+	return CombatStats;
+}
+
+//------------ End CombatCharacter
+
 float ACreature::GetRespawnSeconds() const
 {
 	if (CreatureData)
@@ -204,5 +237,3 @@ float ACreature::GetRespawnSeconds() const
 	}
 	return 0.0f;
 }
-
-//------------ End CombatCharacter

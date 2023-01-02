@@ -27,18 +27,25 @@ protected:
 	virtual void BeginPlay() override;
 
 	// Basic Attributes
-	UPROPERTY(ReplicatedUsing="ReEvaluateAll")
+	UPROPERTY(ReplicatedUsing = "ReEvaluateBasicAttributes")
 	int32 Physique;
-	UPROPERTY(ReplicatedUsing = "ReEvaluateAll")
+	UPROPERTY(ReplicatedUsing = "ReEvaluateBasicAttributes")
 	int32 Coordination;
-	UPROPERTY(ReplicatedUsing = "ReEvaluateAll")
+	UPROPERTY(ReplicatedUsing = "ReEvaluateBasicAttributes")
 	int32 Reasoning;
-	UPROPERTY(ReplicatedUsing = "ReEvaluateAll")
+	UPROPERTY(ReplicatedUsing = "ReEvaluateBasicAttributes")
 	int32 Will;
-	UPROPERTY(ReplicatedUsing = "ReEvaluateAll")
+	UPROPERTY(ReplicatedUsing = "ReEvaluateBasicAttributes")
 	int32 Instinct;
-	UPROPERTY(ReplicatedUsing = "ReEvaluateAll")
+	UPROPERTY(ReplicatedUsing = "ReEvaluateBasicAttributes")
 	int32 Vitality;
+
+	// Player Levels
+	UPROPERTY(Replicated)
+	int32 Attack;
+
+	UPROPERTY(Replicated)
+	int32 Defense;
 
 	// Cross Attributes
 	int32 Might;
@@ -64,6 +71,16 @@ protected:
 	int32 ExtraMagExp;
 	int32 ExtraCombatExp;
 
+	// Stats Modifier
+	UPROPERTY(Replicated)
+	int32 ModMinDamage;
+	UPROPERTY(Replicated)
+	int32 ModMaxDamage;
+	UPROPERTY(Replicated)
+	int32 ModMinArmor;
+	UPROPERTY(Replicated)
+	int32 ModMaxArmor;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -86,10 +103,22 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void ChangeVitalityBy(int Delta);
 
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void ChangeModMinDamageBy(int Delta);
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void ChangeModMaxDamageBy(int Delta);
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void ChangeModMinArmorBy(int Delta);
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void ChangeModMaxArmorBy(int Delta);
+
 protected:
 
 	UFUNCTION()
-	void ReEvaluateAll();
+	void ReEvaluateBasicAttributes();
 
 public:
 
@@ -120,4 +149,12 @@ public:
 	UFUNCTION(BlueprintGetter) int32 GetExtraAlchExp() { return ExtraAlchExp; }
 	UFUNCTION(BlueprintGetter) int32 GetExtraMagExp() { return ExtraMagExp; }
 	UFUNCTION(BlueprintGetter) int32 GetExtraCombatExp() { return ExtraCombatExp; }	
+
+	UFUNCTION(BlueprintGetter) int32 GetAttack() { return Attack; }
+	UFUNCTION(BlueprintGetter) int32 GetDefense() { return Defense; }
+
+	UFUNCTION(BlueprintGetter) int32 GetModMinDamage() { return ModMinDamage; }
+	UFUNCTION(BlueprintGetter) int32 GetModMaxDamage() { return ModMaxDamage; }
+	UFUNCTION(BlueprintGetter) int32 GetModMinArmor() { return ModMinArmor; }
+	UFUNCTION(BlueprintGetter) int32 GetModMaxArmor() { return ModMaxArmor; }
 };

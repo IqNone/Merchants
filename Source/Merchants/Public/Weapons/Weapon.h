@@ -9,6 +9,7 @@
 class USkeletalMeshComponent;
 class UDamageType;
 class UBoxComponent;
+class AMainCharacter;
 
 UCLASS()
 class MERCHANTS_API AWeapon : public AActor
@@ -27,6 +28,11 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UBoxComponent* CombatCollision;
+
+public:
+
+	void OnEquipped();
+	void OnUnequipped();
 
 protected:
 	// Called when the game starts or when spawned

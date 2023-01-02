@@ -6,6 +6,29 @@
 #include "GameFramework/Character.h"
 #include "CombatCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum class ECharacterType : uint8
+{
+	ECT_Player UMETA(DisplayName = "Player"),
+	ECT_Creature UMETA(DisplayName = "Creature"),
+
+	ECT_MAX UMETA(DisplayName = "DefaultMax")
+};
+
+struct FCombatStats
+{
+	int32 Attack;
+	int32 Defence;
+	int32 Might;
+	int32 Toughness;
+	int32 MinExtraDamage;
+	int32 MaxExtraDamage;
+	int32 MinArmor;
+	int32 MaxArmor;
+	int32 Reaction;
+	int32 Dexterity;
+};
+
 UCLASS()
 class MERCHANTS_API ACombatCharacter : public ACharacter
 {
@@ -23,4 +46,9 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	virtual FText GetCharacterName() const;
+
+	UFUNCTION(BlueprintPure)
+	virtual ECharacterType GetCharacterType() const;
+
+	virtual FCombatStats* GetCombatStats() const;
 };

@@ -7,14 +7,15 @@
 #include "InputActionValue.h"
 #include "Items/Item.h"
 #include "Navigation/CrowdAgentInterface.h"
+#include "CombatCharacter.h"
 #include "MainCharacter.generated.h"
 
 class AWeapon;
 class AMainPlayerController;
 class AInteractable;
 class UCombatComponent;
-class ACombatCharacter;
 class UInventoryComponent;
+class UAttributesComponent;
 
 UENUM(BlueprintType)
 enum class ECombatMode : uint8
@@ -27,7 +28,7 @@ enum class ECombatMode : uint8
 };
 
 UCLASS(config = Game)
-class AMainCharacter : public ACharacter, public IItemsHolder, public ICrowdAgentInterface
+class AMainCharacter : public ACombatCharacter, public IItemsHolder, public ICrowdAgentInterface
 {
 	GENERATED_BODY()
 
@@ -108,6 +109,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UInventoryComponent* InventoryComponent;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+	UAttributesComponent* AttributesComponent;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Camera|Zoom", meta = (AllowPrivateAccess = "true"))
 	float CameraMinZoom;
 
@@ -126,7 +130,7 @@ private:
 	AMainPlayerController* MainPlayerController;
 	
 	UPROPERTY(Replicated)
-	AWeapon* CurrentWeapon;
+	AWeapon* CurrentWeapon;	
 	
 	FTimerHandle InteractableCheckTimer;
 
@@ -194,6 +198,9 @@ protected:
 	// To add mapping context
 	virtual void BeginPlay();
 
+	// Called before destroying the object
+	virtual void BeginDestroy() override;
+
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupWeapon();
@@ -208,6 +215,17 @@ public:
 	virtual int32 GetCrowdAgentGroupsToAvoid() const override;
 	virtual int32 GetCrowdAgentGroupsToIgnore() const override;
 	// ICrowdAgentInterface END
+
+private:
+	FCombatStats* CombatStats;
+
+public:
+	// implement CombatCharacter
+	virtual float GetMaxHealth() const override;
+	virtual float GetHealth() const override;
+	virtual FText GetCharacterName() const override;
+	virtual ECharacterType GetCharacterType() const override;
+	virtual FCombatStats* GetCombatStats() const override;
 
 public:
 	/** Returns CameraBoom subobject **/

@@ -8,7 +8,6 @@
 
 class UUserWidget;
 class UWidget;
-class UAttributesComponent;
 
 /**
  * 
@@ -17,11 +16,10 @@ UCLASS()
 class MERCHANTS_API AMainPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
 public:
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
-	UAttributesComponent* AttributesComponent;
+	AMainPlayerController();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
 	TSubclassOf<UUserWidget> MainHUDClass;

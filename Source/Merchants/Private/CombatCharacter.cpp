@@ -26,3 +26,13 @@ FText ACombatCharacter::GetCharacterName() const
 {
 	return FText();
 }
+
+ECharacterType ACombatCharacter::GetCharacterType() const
+{
+	return ECharacterType::ECT_Creature;
+}
+
+FCombatStats* ACombatCharacter::GetCombatStats() const
+{
+	return nullptr;
+}
