@@ -3,6 +3,7 @@
 
 #include "MainPlayerController.h"
 #include "Blueprint/UserWidget.h"
+#include "NPCs/NPCharacter.h"
 
 AMainPlayerController::AMainPlayerController()
 {
@@ -38,6 +39,7 @@ void AMainPlayerController::BeginPlay()
 	InventoryWidget = MainHUDWidget->GetWidgetFromName(InventoryWidgetName);
 	MinimapWidget = MainHUDWidget->GetWidgetFromName(MinimapWidgetName);
 	BagWidget = MainHUDWidget->GetWidgetFromName(BagWidgetName);
+	DialogWidget = MainHUDWidget->GetWidgetFromName(DialogWidgetName);
 }
 
 void AMainPlayerController::ToogleInventory()
@@ -119,6 +121,16 @@ void AMainPlayerController::StopShowingMouse()
 {
 	bForceShowingMouse = false;
 	SetMouseVisibility();
+}
+
+void AMainPlayerController::OpenDialog(ANPCharacter* NPC)
+{
+	if (GetLocalRole() == ROLE_AutonomousProxy && DialogWidget && !DialogWidget->IsVisible())
+	{
+		DialogWidget->SetVisibility(ESlateVisibility::Visible);
+		HandleWindowVisibility(true);
+		OnOpenDialog(NPC);
+	}
 }
 
 void AMainPlayerController::SetMouseVisibility()

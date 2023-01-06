@@ -8,6 +8,7 @@
 
 class UUserWidget;
 class UWidget;
+class ANPCharacter;
 
 /**
  * 
@@ -33,6 +34,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")
 	FName BagWidgetName;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "HUD")
+	FName DialogWidgetName;
+
 public:
 
 	void ToogleInventory();
@@ -47,6 +51,11 @@ public:
 	void ShowMouse();
 	void StopShowingMouse();
 
+	void OpenDialog(ANPCharacter* NPC);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnOpenDialog(ANPCharacter* NPC);
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -55,6 +64,7 @@ private:
 	UWidget* InventoryWidget;
 	UWidget* MinimapWidget;
 	UWidget* BagWidget;
+	UWidget* DialogWidget;
 
 private:
 	int32 OpenedWindows;

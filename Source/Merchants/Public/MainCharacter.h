@@ -17,6 +17,7 @@ class UCombatComponent;
 class UInventoryComponent;
 class UAttributesComponent;
 class UDamageType;
+class ANPCharacter;
 
 UENUM(BlueprintType)
 enum class ECombatMode : uint8
@@ -197,6 +198,7 @@ public:
 	void ToogleMinimap();
 	void OpenBag();
 	void CloseBag();
+	void OpenDialog(ANPCharacter* NPC);
 
 	UFUNCTION()
 	void OnInteractibleDestroyed(AActor* DestroyedActor);

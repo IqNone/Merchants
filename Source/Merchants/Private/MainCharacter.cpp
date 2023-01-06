@@ -291,6 +291,14 @@ void AMainCharacter::CloseBag()
 	}
 }
 
+void AMainCharacter::OpenDialog(ANPCharacter* NPC)
+{
+	if (MainPlayerController)
+	{
+		MainPlayerController->OpenDialog(NPC);
+	}
+}
+
 void AMainCharacter::OnInteractibleDestroyed(AActor* DestroyedActor)
 {	
 	if (DestroyedActor == Interactable)

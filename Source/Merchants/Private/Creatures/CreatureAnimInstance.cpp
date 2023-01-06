@@ -3,6 +3,7 @@
 
 #include "Creatures/CreatureAnimInstance.h"
 #include "Animation/AnimInstance.h"
+#include "KismetAnimationLibrary.h"
 
 void UCreatureAnimInstance::NativeInitializeAnimation()
 {
@@ -25,6 +26,6 @@ void UCreatureAnimInstance::UpdateAnimationProperties()
 		Velocity.Z = 0;
 
 		Speed = Velocity.Size();
-		Direction = UAnimInstance::CalculateDirection(Velocity, Pawn->GetActorRotation());
+		Direction = UKismetAnimationLibrary::CalculateDirection(Velocity, Pawn->GetActorRotation());
 	}
 }
