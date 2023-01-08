@@ -35,12 +35,31 @@ void UNPCDialogComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 void UNPCDialogComponent::Start()
 {
-	CurrentNode = NodeByName[StartNode];
+	if (NodeByName.Contains(StartNode))
+	{
+		CurrentNode = NodeByName[StartNode];
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Invalid dialog start node provided for %s"), *GetOwner()->GetName());
+	}
+}
+
+void UNPCDialogComponent::Next(FName NextNodeName)
+{
+	if (NextNodeName.IsNone() || !NodeByName.Contains(NextNodeName))
+	{
+		CurrentNode = nullptr;
+	}
+	else 
+	{
+		CurrentNode = NodeByName[NextNodeName];
+	}
 }
 
 UTextAndAnswers::UTextAndAnswers()
 {
-	WidgetClass = ConstructorHelpers::FClassFinder<UDialogWidget>(TEXT("/Game/NPCs/Dialog/HUD/Answers")).Class;
+	WidgetClass = ConstructorHelpers::FClassFinder<UDialogWidget>(TEXT("/Game/HUD/Dialog/Answers")).Class;
 }
 
 TSubclassOf<UDialogWidget> UTextAndAnswers::GetWidgetClass() const

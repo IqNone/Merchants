@@ -15,12 +15,16 @@ ANPCInteractable::ANPCInteractable()
 void ANPCInteractable::BeginPlay()
 {
 	Super::BeginPlay();
+	if (ANPCharacter* NPC = Cast<ANPCharacter>(GetOwner()))
+	{
+		InteractionDescription = FText::FromName(NPC->NPCName);
+	}
 }
 
 void ANPCInteractable::Interact(AMainCharacter* Player)
 {
-	if (ANPCharacter * MyOwner = Cast<ANPCharacter>(GetOwner()))
+	if (ANPCharacter * NPC = Cast<ANPCharacter>(GetOwner()))
 	{
-		MyOwner->StartDialog(Player);
+		NPC->StartDialog(Player);
 	}
 }
