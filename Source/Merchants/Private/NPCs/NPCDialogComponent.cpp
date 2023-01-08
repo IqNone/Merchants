@@ -61,8 +61,3 @@ UTextAndAnswers::UTextAndAnswers()
 {
 	WidgetClass = ConstructorHelpers::FClassFinder<UDialogWidget>(TEXT("/Game/HUD/Dialog/Answers")).Class;
 }
-
-TSubclassOf<UDialogWidget> UTextAndAnswers::GetWidgetClass() const
-{	
-	return WidgetClass;
-}

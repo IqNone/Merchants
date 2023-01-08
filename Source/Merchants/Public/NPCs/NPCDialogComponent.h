@@ -34,7 +34,7 @@
 * UDialogNode 
 *	- NodeName:				the name that identifyes the node
 *	- NPCText:				every node contains a text that will be displayed to the user
-*   - GetWidgetClass():     the UI part that will display this node, it will handle the user interaction and 
+*   - WidgetClass:          the UI part that will display this node, it will handle the user interaction and 
 *    							on OnDialogSectionCompleted will provide the next node name (None = end dialog)
 * Example:
 *	class UTextAndAnswers: public UDialogNode
@@ -50,7 +50,7 @@
 * 
 * 
 * How to use it:
-*	In the NPC blueprint editor, add the UNPCDialogComponent component and provide the StartNode and the list of nodes.
+*	In the NPC blueprint editor, select the UNPCDialogComponent component and provide the StartNode and the list of nodes.
 */
 
 
@@ -89,8 +89,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Node")
 	FText NPCText;
 
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	virtual TSubclassOf<UDialogWidget> GetWidgetClass() const { return nullptr; };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Node")
+	TSubclassOf<UDialogWidget> WidgetClass;
 };
 
 USTRUCT(BlueprintType)
@@ -114,11 +114,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Answers")
 	TArray<FTextAnswer> Answers;
-
-	virtual TSubclassOf<UDialogWidget> GetWidgetClass() const override;
-
-private:
-	TSubclassOf<UDialogWidget> WidgetClass;
 };
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
