@@ -353,7 +353,7 @@ void AMainCharacter::BuyItem_Implementation(FName ItemId, int32 Quantity)
 {
 	ANPCharacter* NPC = Cast<ANPCharacter>(Interactable->GetOwner());
 	
-	if (!NPC || (NPC->GetActorLocation() - GetActorLocation()).Length() <= MaxInteractDistance)
+	if (!NPC || (NPC->GetActorLocation() - GetActorLocation()).Length() >= MaxInteractDistance + 100)
 	{
 		return;
 	}
@@ -374,7 +374,7 @@ void AMainCharacter::BuyItem_Implementation(FName ItemId, int32 Quantity)
 void AMainCharacter::SellItem_Implementation(FName ItemId, int32 Quantity)
 {
 	ANPCharacter* NPC = Cast<ANPCharacter>(Interactable->GetOwner());
-	if (!NPC || (NPC->GetActorLocation() - GetActorLocation()).Length() <= MaxInteractDistance)
+	if (!NPC || (NPC->GetActorLocation() - GetActorLocation()).Length() >= MaxInteractDistance + 100)
 	{
 		return;
 	}

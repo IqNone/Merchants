@@ -146,6 +146,16 @@ int32 UInventoryComponent::Remove(const FName ItemId, const int32 Quantity)
 	return Quantity;
 }
 
+int32 UInventoryComponent::GetItemAmmount(const FName ItemId) const
+{
+	const FItem* Existing = Items.FindByPredicate([ItemId](FItem Item)
+		{
+			return Item.ItemId == ItemId;
+		});
+
+	return Existing ? Existing->Quantity : 0;
+}
+
 void UInventoryComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

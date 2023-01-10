@@ -45,5 +45,8 @@ public:
 	int32 Add(const FName ItemId, const int32 Quantity);
 	int32 Remove(const FName ItemId, const int32 Quantity);
 
+	UFUNCTION(BlueprintCallable)
+	int32 GetItemAmmount(const FName ItemId) const;
+
 	FORCEINLINE TArray<FItem> GetItems() { return Items; }
 };
