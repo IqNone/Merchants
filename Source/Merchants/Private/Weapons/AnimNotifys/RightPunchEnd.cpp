@@ -15,6 +15,6 @@ void URightPunchEnd::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase*
 	AMainCharacter* Main = Cast<AMainCharacter>(MeshComp->GetOwner());
 	if (Main)
 	{
-		Main->DeactivateLeftPunchCollistion();
+		Main->DeactivateRightPunchCollision();
 	}
 }
