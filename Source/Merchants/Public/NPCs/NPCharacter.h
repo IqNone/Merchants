@@ -47,4 +47,10 @@ public:
 	void StartDialog(AMainCharacter* Player);
 
 	void StopDialog(AMainCharacter* Player);
+
+	// returns -1 if it doesn't sell the item
+	int GetNPCSellPrice(FName ItemId) const;
+
+	// returns -1 if it doesn't buy the item
+	int GetNPCBuyPrice(FName ItemId) const;
 };

@@ -7,6 +7,7 @@
 #include "Components/ChildActorComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "MainCharacter.h"
+#include "NPCs/StoreComponent.h"
 
 // Sets default values
 ANPCharacter::ANPCharacter()
@@ -31,6 +32,8 @@ ANPCharacter::ANPCharacter()
 void ANPCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	NameComponent->SetText(FText::FromName(NPCName));
 		
 	if (HasAuthority())
 	{
@@ -61,4 +64,18 @@ void ANPCharacter::StartDialog(AMainCharacter* Player)
 
 void ANPCharacter::StopDialog(AMainCharacter* Player)
 {
+}
+
+int ANPCharacter::GetNPCSellPrice(FName ItemId) const
+{
+	UStoreComponent* StoreComponent = Cast<UStoreComponent>(GetComponentByClass(UStoreComponent::StaticClass()));
+	
+	return !StoreComponent ? -1 : StoreComponent->GetNPCSellPrice(ItemId);
+}
+
+int ANPCharacter::GetNPCBuyPrice(FName ItemId) const
+{
+	UStoreComponent* StoreComponent = Cast<UStoreComponent>(GetComponentByClass(UStoreComponent::StaticClass()));
+
+	return !StoreComponent ? -1 : StoreComponent->GetNPCBuyPrice(ItemId);
 }

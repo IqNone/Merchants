@@ -57,7 +57,22 @@ void UNPCDialogComponent::Next(FName NextNodeName)
 	}
 }
 
+void UNPCDialogComponent::Stop()
+{
+	CurrentNode = nullptr;
+}
+
 UTextAndAnswers::UTextAndAnswers()
 {
 	WidgetClass = ConstructorHelpers::FClassFinder<UDialogWidget>(TEXT("/Game/HUD/Dialog/Answers")).Class;
+}
+
+UNPCStore::UNPCStore()
+{
+	WidgetClass = ConstructorHelpers::FClassFinder<UDialogWidget>(TEXT("/Game/HUD/Dialog/NPCStore")).Class;
+}
+
+UPlayerStore::UPlayerStore()
+{
+	WidgetClass = ConstructorHelpers::FClassFinder<UDialogWidget>(TEXT("/Game/HUD/Dialog/PlayerStore")).Class;
 }

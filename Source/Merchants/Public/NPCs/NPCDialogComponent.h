@@ -89,7 +89,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Node")
 	FText NPCText;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Node")
+	UPROPERTY(BlueprintReadOnly, Category = "Node")
 	TSubclassOf<UDialogWidget> WidgetClass;
 };
 
@@ -114,6 +114,28 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Answers")
 	TArray<FTextAnswer> Answers;
+};
+
+UCLASS(EditInlineNew, Blueprintable, BlueprintType)
+class UNPCStore : public UDialogNode
+{
+	GENERATED_BODY()
+public:
+	UNPCStore();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Node")
+	FName Next;
+};
+
+UCLASS(EditInlineNew, Blueprintable, BlueprintType)
+class UPlayerStore : public UDialogNode
+{
+	GENERATED_BODY()
+public:
+	UPlayerStore();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Node")
+	FName Next;
 };
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -141,11 +163,13 @@ public:
 
 	void Start();
 
+	// Called by DialogHUD
 	UFUNCTION(BlueprintCallable)
 	void Next(FName NextNodeName);
-	
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void OnNodeChanged();
+
+	// Called by DialogHUD
+	UFUNCTION(BlueprintCallable)
+	void Stop();
 
 private:
 

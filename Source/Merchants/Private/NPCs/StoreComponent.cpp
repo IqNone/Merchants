@@ -21,7 +21,13 @@ void UStoreComponent::BeginPlay()
 	// ...
 	if (ItemsDataTable)
 	{
-		ItemsDataTable->GetAllRows<FStoreItem>(TEXT("Store Component"), StoreItems);
+		TArray<FStoreItem*> TempItems;
+		ItemsDataTable->GetAllRows<FStoreItem>(TEXT("Store Component"), TempItems);
+
+		for (auto Item : TempItems)
+		{
+			StoreItems.Add(*Item);
+		}
 	}
 }
 
@@ -32,5 +38,25 @@ void UStoreComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+int UStoreComponent::GetNPCSellPrice(FName ItemId) const
+{
+	const FStoreItem* Item = StoreItems.FindByPredicate([ItemId](FStoreItem Item)
+		{
+			return Item.ItemId == ItemId;
+		});
+
+	return !Item ? -1 : Item->StoreSellingPrice;
+}
+
+int UStoreComponent::GetNPCBuyPrice(FName ItemId) const
+{
+	const FStoreItem* Item = StoreItems.FindByPredicate([ItemId](FStoreItem Item)
+		{
+			return Item.ItemId == ItemId;
+		});
+
+	return !Item ? -1 : Item->StoreBuyingPrice;
 }
 

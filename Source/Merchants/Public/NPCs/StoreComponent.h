@@ -36,7 +36,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Store")
 	UDataTable* ItemsDataTable;
 
-	TArray<FStoreItem*> StoreItems;
+	UPROPERTY(BlueprintReadOnly)
+	TArray<FStoreItem> StoreItems;
 
 protected:
 	// Called when the game starts
@@ -46,5 +47,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	
+	// return -1 if the NPC doesn't sell this item
+	int GetNPCSellPrice(FName ItemId) const;
+
+	// return -1 if the NPC doesn't buy this item
+	int GetNPCBuyPrice(FName ItemId) const;
 };

@@ -21,6 +21,7 @@
 #include "Items/Item.h"
 #include "Net/UnrealNetwork.h"
 #include "Gameplay/GameplayUtils.h"
+#include "NPCs/NPCharacter.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMerchantsCharacter
@@ -346,6 +347,47 @@ void AMainCharacter::GetAll_Implementation()
 void AMainCharacter::SetLocationAndRotation_Implementation(FVector NewLocation, FRotator NewRotation)
 {
 	SetActorLocationAndRotation(NewLocation, NewRotation);
+}
+
+void AMainCharacter::BuyItem_Implementation(FName ItemId, int32 Quantity)
+{
+	ANPCharacter* NPC = Cast<ANPCharacter>(Interactable->GetOwner());
+	
+	if (!NPC || (NPC->GetActorLocation() - GetActorLocation()).Length() <= MaxInteractDistance)
+	{
+		return;
+	}
+
+	int32 Price = NPC->GetNPCSellPrice(ItemId);
+	if (Price <= 0)
+	{
+		return;
+	}
+
+	if (InventoryComponent->CanAdd(ItemId, Quantity) && InventoryComponent->GetCoins() >= Price * Quantity)
+	{
+		InventoryComponent->Add(ItemId, Quantity);
+		InventoryComponent->RemoveCoins(Price * Quantity);
+	}
+}
+
+void AMainCharacter::SellItem_Implementation(FName ItemId, int32 Quantity)
+{
+	ANPCharacter* NPC = Cast<ANPCharacter>(Interactable->GetOwner());
+	if (!NPC || (NPC->GetActorLocation() - GetActorLocation()).Length() <= MaxInteractDistance)
+	{
+		return;
+	}
+
+	int32 Price = NPC->GetNPCBuyPrice(ItemId);
+	if (Price <= 0)
+	{
+		return;
+	}
+
+	// Sell as much as we can
+	int32 SoldQuantity = InventoryComponent->Remove(ItemId, Quantity);
+	InventoryComponent->AddCoins(SoldQuantity * Price);
 }
 
 void AMainCharacter::CheckInteractable()

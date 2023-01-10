@@ -203,17 +203,23 @@ public:
 	UFUNCTION()
 	void OnInteractibleDestroyed(AActor* DestroyedActor);
 
-	UFUNCTION(Server, Reliable, BlueprintCallable)
+	UFUNCTION(Server, Unreliable, BlueprintCallable)
 	void TakeItem(const TScriptInterface<IItemsHolder>& Holder, const FName ItemId, const int32 Quantity);
 
-	UFUNCTION(Server, Reliable, BlueprintCallable)
+	UFUNCTION(Server, Unreliable, BlueprintCallable)
 	void GiveItem(const TScriptInterface<IItemsHolder>& Holder, const FName ItemId, const int32 Quantity);
 
-	UFUNCTION(Server, Reliable)
+	UFUNCTION(Server, Unreliable)
 	void GetAll();
 
 	UFUNCTION(Server, Unreliable)
 	void SetLocationAndRotation(FVector NewLocation, FRotator NewRotation);
+
+	UFUNCTION(Server, Unreliable, BlueprintCallable)
+	void BuyItem(FName ItemId, int32 Quantity);
+
+	UFUNCTION(Server, Unreliable, BlueprintCallable)
+	void SellItem(FName ItemId, int32 Quantity);
 
 protected:
 	// APawn interface
