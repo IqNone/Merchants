@@ -36,16 +36,16 @@ public:
 	FName ItemId;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drops")
-	EDropItemType DropType;
+	EDropItemType DropType = EDropItemType::EDIT_RandomQuantity;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drops", Meta = (ClampMin = "0", EditCondition = "DropType == EDropItemType::EDIT_RandomQuantity"))
-	int32 MinQuantity;
+	int32 MinQuantity = 1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drops", Meta = (ClampMin = "0", EditCondition = "DropType == EDropItemType::EDIT_RandomQuantity"))
-	int32 MaxQuantity;
+	int32 MaxQuantity = 1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Drops", Meta = (ClampMin = "0", ClampMax = "1",EditCondition = "DropType == EDropItemType::EDIT_RandomChance"))
-	float Chanche;
+	float Chanche = .0F;
 };
 
 USTRUCT(BlueprintType)
@@ -59,43 +59,43 @@ public:
 	FText Name;	
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Spawn)
-	float RespawnSeconds;
+	float RespawnSeconds = 10.;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = AI)
-	bool bAgressive;
+	bool bAgressive = false;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
-	float Health;
+	float Health = 100.;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
-	int32 Attack;
+	int32 Attack = 0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
-	int32 Defence;
+	int32 Defence = 0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
-	int32 Might;
+	int32 Might = 0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
-	int32 Toughness;
+	int32 Toughness = 0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
-	int32 Reaction;
+	int32 Reaction = 0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
-	int32 Dexterity;
+	int32 Dexterity = 0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
-	int32 MinArmor;
+	int32 MinArmor = 0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
-	int32 MaxArmor;
+	int32 MaxArmor = 0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
-	float WalkSpeed;
+	float WalkSpeed = .0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Stats)
-	float RunSpeed;
+	float RunSpeed = .0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Drops)
 	TArray<FDropItem> Drops;

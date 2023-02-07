@@ -26,19 +26,19 @@ struct FItemData : public FTableRowBase
 public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)
-	bool bStackable;
+	bool bStackable = true;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)
 	FText Name;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)
-	EItemType ItemType;
+	EItemType ItemType = EItemType::EIT_Miscellaneous;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)
-	int32 Weight;
+	int32 Weight = 1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)
-	UTexture2D* Icon;
+	UTexture2D* Icon = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Items)
 	FText Description;

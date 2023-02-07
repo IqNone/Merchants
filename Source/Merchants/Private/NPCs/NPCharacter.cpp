@@ -33,7 +33,11 @@ void ANPCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	NameComponent->SetText(FText::FromName(NPCName));
+	if (!HasAuthority())
+	{
+		//this line fails on the dedicated server
+		NameComponent->SetText(FText::FromName(NPCName));
+	}	
 		
 	if (HasAuthority())
 	{

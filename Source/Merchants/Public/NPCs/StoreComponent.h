@@ -18,10 +18,10 @@ public:
 	FName ItemId;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	int32 StoreBuyingPrice;
+	int32 StoreBuyingPrice = 0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	int32 StoreSellingPrice;
+	int32 StoreSellingPrice = 0;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
