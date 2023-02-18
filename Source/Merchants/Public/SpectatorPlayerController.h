@@ -21,16 +21,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
 	TSubclassOf<UUserWidget> MainMenuHUDClass;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Menu")
+	UUserWidget* MainMenuHUDWidget;
+
 protected:
 	virtual void BeginPlay() override;
 
-private:
+public:
 
-	UPROPERTY()
-	UUserWidget* MainMenuHUDWidget;
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Menu")
+	void Show();
 
 public:
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Menu|Actions")
 	void Login(FString Username, FString Password);
 };

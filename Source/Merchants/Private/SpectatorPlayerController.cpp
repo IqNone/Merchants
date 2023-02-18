@@ -14,10 +14,12 @@ void ASpectatorPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+#if WITH_EDITOR //Dont't create the HUD on the server side when running from editor
 	if (GetLocalRole() != ROLE_AutonomousProxy)
 	{
 		return;
 	}
+#endif
 
 	FInputModeUIOnly InputMode;
 	SetShowMouseCursor(true);
@@ -32,8 +34,14 @@ void ASpectatorPlayerController::BeginPlay()
 		{
 			MainMenuHUDWidget->AddToViewport();
 			MainMenuHUDWidget->SetVisibility(ESlateVisibility::Visible);
+
+			Show();
 		}
 	}
+}
+
+void ASpectatorPlayerController::Show_Implementation()
+{
 }
 
 void ASpectatorPlayerController::Login(FString Username, FString Password)

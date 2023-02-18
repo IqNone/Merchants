@@ -29,6 +29,10 @@
 		{
 			"Name": "HDRIBackdrop",
 			"Enabled": true
+		},
+		{
+			"Name": "JWT",
+			"Enabled": true
 		}
 	]
 }
