@@ -40,6 +40,8 @@ void AMainPlayerController::BeginPlay()
 	MinimapWidget = MainHUDWidget->GetWidgetFromName(MinimapWidgetName);
 	BagWidget = MainHUDWidget->GetWidgetFromName(BagWidgetName);
 	DialogWidget = MainHUDWidget->GetWidgetFromName(DialogWidgetName);
+
+	SetMouseVisibility();
 }
 
 void AMainPlayerController::ToogleInventory()
